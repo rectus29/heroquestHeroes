@@ -1,0 +1,41 @@
+server:
+  port: 8029
+  servlet:
+    context-path: /HQHeroes
+
+springdoc:
+  swagger-ui.path: /swagger-ui.html
+  show-actuator: true
+
+
+logging:
+  level:
+    root: WARN
+    fr:
+      rectus29: DEBUG
+#logging.logback.rollingpolicy.file-name-pattern=mailNotificationListener.log
+#logging.level.org.springframework=DEBUG
+
+# 4 DEV ONLY
+#spring:
+    #  data:
+      #mongodb:
+      #database: babylist
+      #username: babylistUser
+      #password: pass4babyList
+      #host: localhost
+      #port: 27020
+
+#actuator config
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health
+    health:
+      show-details: always
+      defaults:
+        enabled: true
+    beans:
+      cache:
+        time-to-live: 10s
