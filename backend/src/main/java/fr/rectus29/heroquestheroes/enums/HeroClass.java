@@ -1,14 +1,21 @@
 package fr.rectus29.heroquestheroes.enums;
 
 public enum HeroClass {
-    BARBARE(4, 2), ELFE(2,2), NAIN(3,1), ENCHANTEUR(4,1);
+    BARBARE(8, 2, 3,2),
+    ELFE(6,4,2,2),
+    NAIN(6,4,2,2),
+    ENCHANTEUR(4,6,1,2);
 
     private int spiritPoints;
     private int healthPoints;
+    private int attackPoints;
+    private int defencePoints;
 
-    private HeroClass(int spiritPoint, int healthPoint) {
+    private HeroClass(int healthPoint, int spiritPoint, int attackDice, int defenseDice) {
         this.spiritPoints = spiritPoint;
         this.healthPoints = healthPoint;
+        this.attackPoints = attackDice;
+        this.defencePoints = defenseDice;
     }
 
     public int getSpiritPoints() {

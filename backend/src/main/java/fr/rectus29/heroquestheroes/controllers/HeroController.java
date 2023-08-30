@@ -3,6 +3,7 @@ package fr.rectus29.heroquestheroes.controllers;
 import fr.rectus29.heroquestheroes.model.Hero;
 import fr.rectus29.heroquestheroes.repository.HeroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;

@@ -13,12 +13,12 @@ logging:
     root: WARN
     fr:
       rectus29: DEBUG
-#logging.logback.rollingpolicy.file-name-pattern=mailNotificationListener.log
-#logging.level.org.springframework=DEBUG
+      #logging.logback.rollingpolicy.file-name-pattern=mailNotificationListener.log
+      #logging.level.org.springframework=DEBUG
 
-# 4 DEV ONLY
-#spring:
-    #  data:
+      # 4 DEV ONLY
+      #spring:
+      #  data:
       #mongodb:
       #database: babylist
       #username: babylistUser
