@@ -11,6 +11,9 @@ public class GoldEntry {
     private Date date = new Date();
     private int amount = 0;
 
+    public GoldEntry() {
+    }
+
     public GoldEntry(int amount) {
         this.amount = amount;
     }

@@ -1,7 +1,9 @@
 package fr.rectus29.heroquestheroes.controllers;
 
+import fr.rectus29.heroquestheroes.dto.HeroDTO;
 import fr.rectus29.heroquestheroes.model.Hero;
 import fr.rectus29.heroquestheroes.repository.HeroRepository;
+import fr.rectus29.heroquestheroes.services.HeroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,21 +19,21 @@ import java.util.List;
 @RequestMapping("api/v1/heroes")
 public class HeroController {
 
-    private HeroRepository heroRepository;
+    private HeroService heroService;
 
     @Autowired
-    public HeroController(HeroRepository heroRepository) {
-        this.heroRepository = heroRepository;
+    public HeroController(HeroService heroService) {
+        this.heroService = heroService;
     }
 
     @GetMapping
-    public List<Hero> getAllHeroes() {
-        return heroRepository.findAll();
+    public List<HeroDTO> getAllHeroes() {
+        return heroService.findAll().stream().map(HeroDTO::from).toList();
     }
 
     @PostMapping
     public Hero createHero(@RequestBody Hero hero) {
-        return heroRepository.save(hero);
+        return heroService.save(hero);
     }
 
 }
