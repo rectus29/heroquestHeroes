@@ -48,7 +48,7 @@ public class HeroquestHeroesConfiguration {
     public EhCacheManagerFactoryBean ehCacheCacheManager() {
         EhCacheManagerFactoryBean cmfb = new EhCacheManagerFactoryBean();
         cmfb.setShared(true);
-        cmfb.setCacheManagerName("BabyList");
+        cmfb.setCacheManagerName("HQHeroes");
         return cmfb;
     }
 
@@ -87,7 +87,8 @@ public class HeroquestHeroesConfiguration {
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-        return builder -> builder.serializerByType(ObjectId.class, new JsonSerializer<ObjectId>() {
+        return builder -> builder.serializerByType(
+                ObjectId.class, new JsonSerializer<ObjectId>() {
             @Override
             public void serialize(ObjectId value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
                 gen.writeString(value.toHexString());

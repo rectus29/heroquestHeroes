@@ -1,10 +1,10 @@
 package fr.rectus29.heroquestheroes.enums;
 
 public enum HeroClass {
-    BARBARE(8, 2, 3,2),
-    ELFE(6,4,2,2),
-    NAIN(6,4,2,2),
-    ENCHANTEUR(4,6,1,2);
+    BARBARE(8, 2, 3, 2),
+    ELFE(6, 4, 2, 2),
+    NAIN(6, 4, 2, 2),
+    ENCHANTEUR(4, 6, 1, 2);
 
     private int spiritPoints;
     private int healthPoints;

@@ -7,6 +7,7 @@ import fr.rectus29.heroquestheroes.model.Stuff;
 import fr.rectus29.heroquestheroes.utils.HeroUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class HeroDTO {
 
+    private ObjectId id;
     private String name;
     private HeroClass heroClass;
     private int spiritPoints = 0;
@@ -26,6 +28,7 @@ public class HeroDTO {
 
     public static HeroDTO from(Hero hero){
         return new HeroDTO()
+                .setId(hero.getId())
                 .setName(hero.getName())
                 .setHeroClass(hero.getHeroClass())
                 .setSpiritPoints(hero.getHeroClass().getSpiritPoints())
@@ -42,11 +45,17 @@ public class HeroDTO {
     public static class StuffDTO{
         private String name;
         private String desc;
+        private List<StuffAttributeDTO> attributes = new ArrayList<>();
+        @Data
+        public static class StuffAttributeDTO{
+            private String dogme;
+            private int value;
+        }
 
         public static StuffDTO from(Stuff stuff){
             return new StuffDTO()
                     .setName(stuff.getName())
-                    .setDesc(stuff.getDesc());
+                    .setDesc(stuff.getDesc()).setAttributes(stuff.getAttributesList().stream().map(attrib -> new StuffAttributeDTO().setDogme(attrib.getDogme()).setValue(attrib.getValue())).toList());
         }
     }
 }
