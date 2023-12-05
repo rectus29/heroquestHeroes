@@ -33,4 +33,9 @@ public class HeroService {
                 .forEach(e -> e.apply(optionalHero.get()));
         return optionalHero.get();
     }
+
+    private Hero resolved(Hero hero) {
+        //hero
+        return null;
+    }
 }

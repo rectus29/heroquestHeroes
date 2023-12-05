@@ -11,11 +11,11 @@ public enum HeroClass {
     private int attackPoints;
     private int defencePoints;
 
-    private HeroClass(int healthPoint, int spiritPoint, int attackDice, int defenseDice) {
+    private HeroClass(int healthPoint, int spiritPoint, int attackDice, int defenceDice) {
         this.spiritPoints = spiritPoint;
         this.healthPoints = healthPoint;
         this.attackPoints = attackDice;
-        this.defencePoints = defenseDice;
+        this.defencePoints = defenceDice;
     }
 
     public int getSpiritPoints() {

@@ -5,7 +5,7 @@ import {HeroTileComponent} from "../components/hero-tile/hero-tile.component";
 
 const routes: Routes = [
   {path: 'heroes', component: HeroesListComponent},
-  {path: 'hero', component: HeroTileComponent}
+  {path: 'hero/:id', component: HeroTileComponent}
 ];
 
 @NgModule({

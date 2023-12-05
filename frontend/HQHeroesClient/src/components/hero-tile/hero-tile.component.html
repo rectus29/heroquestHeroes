@@ -1,1 +1,34 @@
 <p>hero-tile works!</p>
+
+<div>
+  <div>HeroName {{hero.name}}</div>
+  <div>HeroClass {{hero.heroClass}}</div>
+</div>
+<div>
+  <div>Esprit {{hero.spiritPoints}}<</div>
+  <div>Corps {{hero.healthPoints}}<</div>
+</div>
+<div>
+  <div>Attaque</div>
+  <div>Défense</div>
+</div>
+<div>
+  <div>Equipement</div>
+  <ul *ngFor="let stuffLine of hero.stuff">
+    <li>{{stuffLine}}</li>
+  </ul>
+</div>
+<div>
+  <div>Bourse</div>
+  <div>Total:</div>
+  <ul *ngFor="let goldLine of hero.golds">
+    <li>{{goldLine}}</li>
+  </ul>
+</div>
+
+<div>
+  <div>Quétes terminées</div>
+  <ul *ngFor="let quest of hero.endedQuests">
+    <li>{{quest}}</li>
+  </ul>
+</div>

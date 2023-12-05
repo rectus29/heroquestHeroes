@@ -23,10 +23,10 @@ public class HeroDTO {
     private int HealthPoints = 0;
     private int goldAmount = 0;
     private int attackDice = 0;
-    private int defenseDice = 0;
+    private int defenceDice = 0;
     private List<StuffDTO> equipements = new ArrayList<>();
 
-    public static HeroDTO from(Hero hero){
+    public static HeroDTO from(Hero hero) {
         return new HeroDTO()
                 .setId(hero.getId())
                 .setName(hero.getName())
@@ -35,27 +35,28 @@ public class HeroDTO {
                 .setHealthPoints(hero.getHealthPoints())
                 .setGoldAmount(hero.getGoldEntries().stream().map(GoldEntry::getAmount).reduce(0, Integer::sum))
                 .setAttackDice(HeroUtils.computeAttackDice(hero))
-                .setDefenseDice(HeroUtils.computeDefenseDice(hero))
+                .setDefenceDice(HeroUtils.computeDefenseDice(hero))
                 .setEquipements(hero.getEquipements().stream().map(StuffDTO::from).toList());
 
     }
 
     @Data
     @Accessors(chain = true)
-    public static class StuffDTO{
+    public static class StuffDTO {
         private String name;
         private String desc;
         private List<StuffAttributeDTO> attributes = new ArrayList<>();
+
         @Data
-        public static class StuffAttributeDTO{
+        public static class StuffAttributeDTO {
             private String dogme;
             private int value;
         }
 
-        public static StuffDTO from(Stuff stuff){
+        public static StuffDTO from(Stuff stuff) {
             return new StuffDTO()
                     .setName(stuff.getName())
-                    .setDesc(stuff.getDesc()).setAttributes(stuff.getAttributesList().stream().map(attrib -> new StuffAttributeDTO().setDogme(attrib.getDogme()).setValue(attrib.getValue())).toList());
+                    .setDesc(stuff.getDesc()).setAttributes(stuff.getAttributesList().stream().map(attrib -> new StuffAttributeDTO().setDogme(attrib.getDogma().name()).setValue(attrib.getValue())).toList());
         }
     }
 }

@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Hero } from '../model/hero';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Hero} from '../model/hero';
+import {Observable} from 'rxjs';
 
 
 @Injectable({
@@ -17,6 +17,10 @@ export class HeroService {
 
   public findAll(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.endpointUrl);
+  }
+
+  public findById(heroId: String): Observable<Hero> {
+    return this.http.get<Hero>(this.endpointUrl + "/" + heroId);
   }
 
   public save(user: Hero) {
