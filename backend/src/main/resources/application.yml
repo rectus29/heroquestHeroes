@@ -7,6 +7,11 @@ springdoc:
   swagger-ui.path: /swagger-ui.html
   show-actuator: true
 
+spring:
+  data:
+    mongodb:
+      auto-index-creation=true:
+
 
 logging:
   level:

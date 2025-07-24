@@ -20,10 +20,15 @@ public class HeroDTO {
     private String name;
     private HeroClass heroClass;
     private int spiritPoints = 0;
-    private int HealthPoints = 0;
+    private int healthPoints = 0;
+    private int attackPoints = 0;
+    private int defencePoints = 0;
     private int goldAmount = 0;
-    private int attackDice = 0;
-    private int defenceDice = 0;
+
+    private int resolvedAttackPoints = 0;
+    private int resolvedDefencePoints = 0;
+
+
     private List<StuffDTO> equipements = new ArrayList<>();
 
     public static HeroDTO from(Hero hero) {
@@ -33,10 +38,12 @@ public class HeroDTO {
                 .setHeroClass(hero.getHeroClass())
                 .setSpiritPoints(hero.getHeroClass().getSpiritPoints())
                 .setHealthPoints(hero.getHealthPoints())
+                .setAttackPoints(hero.getAttackPoints())
+                .setDefencePoints(hero.getDefencePoints())
                 .setGoldAmount(hero.getGoldEntries().stream().map(GoldEntry::getAmount).reduce(0, Integer::sum))
-                .setAttackDice(HeroUtils.computeAttackDice(hero))
-                .setDefenceDice(HeroUtils.computeDefenseDice(hero))
-                .setEquipements(hero.getEquipements().stream().map(StuffDTO::from).toList());
+                .setEquipements(hero.getEquipements().stream().map(StuffDTO::from).toList())
+                .setResolvedAttackPoints(HeroUtils.resolveAttackPoint(hero))
+                .setResolvedDefencePoints(HeroUtils.resolveDefencePoint(hero));
 
     }
 

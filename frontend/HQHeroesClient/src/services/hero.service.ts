@@ -12,7 +12,7 @@ export class HeroService {
   private endpointUrl: string;
 
   constructor(private http: HttpClient) {
-    this.endpointUrl = 'http://localhost:8029/api/v1/heroes';
+    this.endpointUrl = 'http://localhost:8029/HQHeroes/api/v1/heroes';
   }
 
   public findAll(): Observable<Hero[]> {
@@ -20,7 +20,7 @@ export class HeroService {
   }
 
   public findById(heroId: String): Observable<Hero> {
-    return this.http.get<Hero>(this.endpointUrl + "/" + heroId);
+    return this.http.get<Hero>(this.endpointUrl + "/" + heroId + "/resolved");
   }
 
   public save(user: Hero) {

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200/")
 @RequestMapping("api/v1/heroes")
 public class HeroController {
 
@@ -36,11 +37,10 @@ public class HeroController {
     }
 
 
-    @GetMapping("{id}/resolved")
-    public HeroDTO getresolvedHero(@PathVariable("id") String id) {
-        return HeroDTO.from(heroService.getResolved(new ObjectId(id)));
+    @GetMapping("/{id}")
+    public HeroDTO getHero(@PathVariable(value = "id", required = true)final ObjectId id) {
+        return HeroDTO.from(heroService.findOneById(id).orElseThrow());
     }
-
 
     @PostMapping
     public Hero createHero(@RequestBody Hero hero) {

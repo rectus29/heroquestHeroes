@@ -22,20 +22,13 @@ public class HeroService {
         return this.heroRepository.findAll();
     }
 
+    public Optional<Hero> findOneById(ObjectId id){
+        return this.heroRepository.findById(id);
+    }
+
     public Hero save(Hero hero) {
         return this.heroRepository.save(hero);
     }
 
-    public Hero getResolved(ObjectId id) {
-        Optional<Hero> optionalHero = this.heroRepository.findById(id);
-        optionalHero.orElseThrow(() -> new RuntimeException())
-                .getEquipements()
-                .forEach(e -> e.apply(optionalHero.get()));
-        return optionalHero.get();
-    }
 
-    private Hero resolved(Hero hero) {
-        //hero
-        return null;
-    }
 }
