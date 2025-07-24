@@ -24,7 +24,7 @@ import java.util.Objects;
 @RequestMapping("api/v1/heroes")
 public class HeroController {
 
-    private HeroService heroService;
+    private final HeroService heroService;
 
     @Autowired
     public HeroController(HeroService heroService) {
