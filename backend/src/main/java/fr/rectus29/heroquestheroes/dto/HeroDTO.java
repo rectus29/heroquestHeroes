@@ -25,6 +25,7 @@ public class HeroDTO {
     private int attackPoints = 0;
     private int defencePoints = 0;
     private int goldAmount = 0;
+    private List<GoldEntryDTO> goldEntries = new ArrayList<>();
 
     private int resolvedAttackPoints = 0;
     private int resolvedDefencePoints = 0;
@@ -44,12 +45,27 @@ public class HeroDTO {
                 .setAttackPoints(hero.getAttackPoints())
                 .setDefencePoints(hero.getDefencePoints())
                 .setGoldAmount(hero.getGoldEntries().stream().map(GoldEntry::getAmount).reduce(0, Integer::sum))
+                .setGoldEntries(hero.getGoldEntries().stream().map(GoldEntryDTO::from).toList())
                 .setEquipements(hero.getEquipements().stream().map(StuffDTO::from).toList())
                 .setComment(hero.getComment())
                 .setCompletedQuests(new ArrayList<>(hero.getCompletedQuests()))
                 .setResolvedAttackPoints(HeroUtils.resolveAttackPoint(hero))
                 .setResolvedDefencePoints(HeroUtils.resolveDefencePoint(hero));
+    }
 
+    @Data
+    @Accessors(chain = true)
+    public static class GoldEntryDTO {
+        private int    amount;
+        private String comment;
+        private java.util.Date date;
+
+        public static GoldEntryDTO from(GoldEntry entry) {
+            return new GoldEntryDTO()
+                    .setAmount(entry.getAmount())
+                    .setComment(entry.getComment())
+                    .setDate(entry.getDate());
+        }
     }
 
     @Data
