@@ -1,7 +1,9 @@
 package fr.rectus29.heroquestheroes.dto;
 
 import fr.rectus29.heroquestheroes.enums.Quest;
+import lombok.Data;
 
+@Data
 public class QuestDTO {
 
     private String id;
@@ -19,10 +21,4 @@ public class QuestDTO {
         dto.rewardNotes       = quest.getRewardNotes();
         return dto;
     }
-
-    public String getId()               { return id; }
-    public int    getNumber()           { return number; }
-    public String getTitle()            { return title; }
-    public int    getGoldRewardPerHero(){ return goldRewardPerHero; }
-    public String getRewardNotes()      { return rewardNotes; }
 }

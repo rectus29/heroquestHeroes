@@ -1,11 +1,14 @@
 package fr.rectus29.heroquestheroes.enums;
 
+import lombok.Getter;
+
 /**
  * Catalogue des 14 quêtes du livre de base HeroQuest (édition originale MB, 1990).
  *
  * <p>Chaque entrée contient le numéro de quête, le titre, l'objectif résumé,
  * la récompense en or par héros et les éventuelles récompenses spéciales.</p>
  */
+@Getter
 public enum
 Quest {
 
@@ -122,11 +125,4 @@ Quest {
         this.rewardNotes       = rewardNotes;
     }
 
-    // ── Accesseurs ──────────────────────────────────────────────────────────
-
-    public int    getNumber()            { return number;            }
-    public String getTitle()             { return title;             }
-    public String getBriefing()          { return briefing;          }
-    public int    getGoldRewardPerHero() { return goldRewardPerHero; }
-    public String getRewardNotes()       { return rewardNotes;       }
 }
