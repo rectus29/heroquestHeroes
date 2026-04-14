@@ -30,5 +30,8 @@ public class HeroService {
         return this.heroRepository.save(hero);
     }
 
+    public void deleteById(ObjectId id) {
+        this.heroRepository.deleteById(id);
+    }
 
 }

@@ -1,13 +1,13 @@
 package fr.rectus29.heroquestheroes.controllers;
 
 import fr.rectus29.heroquestheroes.dto.HeroDTO;
+import fr.rectus29.heroquestheroes.dto.HeroUpdateRequest;
+import fr.rectus29.heroquestheroes.model.GoldEntry;
 import fr.rectus29.heroquestheroes.model.Hero;
-import fr.rectus29.heroquestheroes.repository.HeroRepository;
 import fr.rectus29.heroquestheroes.services.HeroService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200/")
 @RequestMapping("api/v1/heroes")
 public class HeroController {
 
@@ -45,6 +44,28 @@ public class HeroController {
     @PostMapping
     public Hero createHero(@RequestBody Hero hero) {
         return heroService.save(hero);
+    }
+
+    @PutMapping("/{id}")
+    public HeroDTO updateHero(@PathVariable("id") final ObjectId id, @RequestBody HeroUpdateRequest request) {
+        Hero hero = heroService.findOneById(id).orElseThrow();
+        hero.setName(request.getName())
+                .setHealthPoints(request.getHealthPoints())
+                .setSpiritPoints(request.getSpiritPoints())
+                .setAttackPoints(request.getAttackPoints())
+                .setDefencePoints(request.getDefencePoints())
+                .setComment(request.getComment())
+                .setCompletedQuests(request.getCompletedQuests());
+        hero.getGoldEntries().clear();
+        if (request.getGoldAmount() > 0) {
+            hero.getGoldEntries().add(new GoldEntry(request.getGoldAmount()));
+        }
+        return HeroDTO.from(heroService.save(hero));
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteHero(@PathVariable("id") final ObjectId id) {
+        heroService.deleteById(id);
     }
 
 }

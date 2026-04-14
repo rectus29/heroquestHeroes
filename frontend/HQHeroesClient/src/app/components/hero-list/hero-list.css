@@ -1,0 +1,237 @@
+/* ══════════════════════════════════════════════════
+   Hero List — HeroQuest style
+   ══════════════════════════════════════════════════ */
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+/* ── En-tête ─────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--hq-border);
+  position: relative;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hq-gold), transparent);
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-title h1 {
+  margin: 0;
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--hq-gold-bright);
+  text-shadow:
+    0 0 20px rgba(201, 168, 76, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.title-icon {
+  font-size: 2.2rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  color: var(--hq-gold);
+  filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.5));
+}
+
+/* ── Grille de héros ─────────────────────────────── */
+.heroes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 24px;
+}
+
+/* ── Carte héros ─────────────────────────────────── */
+.hero-card {
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px !important;
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(201, 168, 76, 0.04) 0%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-card::after {
+  content: '✦';
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 0.65rem;
+  color: var(--hq-gold);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.hero-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--hq-border-bright) !important;
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(201, 168, 76, 0.15),
+    inset 0 1px 0 rgba(201, 168, 76, 0.12) !important;
+}
+
+/* ── Badge de classe ─────────────────────────────── */
+.class-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 2px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.class-badge mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.mat-mdc-card-title {
+  font-family: 'Cinzel', serif !important;
+  font-size: 1.15rem !important;
+  letter-spacing: 1.5px !important;
+  color: var(--hq-parchment) !important;
+}
+
+/* ── Grille de stats ─────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 4px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--hq-border);
+  position: relative;
+}
+
+.stat-icon {
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.stat-icon.health  { color: #ef5350; }
+.stat-icon.spirit  { color: #64b5f6; }
+.stat-icon.attack  { color: #ffa040; }
+.stat-icon.defence { color: #81c784; }
+
+.stat-value {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--hq-parchment);
+}
+
+.stat-label {
+  font-size: 0.6rem;
+  color: var(--hq-parchment-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Cinzel', serif;
+}
+
+/* ── Or ──────────────────────────────────────────── */
+.gold-row,
+.equip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 0.88rem;
+  color: var(--hq-parchment-dim);
+}
+
+.gold-icon {
+  color: var(--hq-gold) !important;
+}
+
+/* ── Bouton action ───────────────────────────────── */
+.mat-mdc-card-actions button {
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 1px !important;
+  color: var(--hq-gold) !important;
+}
+
+/* ── États : chargement / erreur / vide ──────────── */
+.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.centered p {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--hq-parchment-dim);
+}
+
+.big-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+  opacity: 0.4;
+  color: var(--hq-parchment-dim);
+}
+
+.error-state .big-icon {
+  color: #e07070;
+  opacity: 0.8;
+}

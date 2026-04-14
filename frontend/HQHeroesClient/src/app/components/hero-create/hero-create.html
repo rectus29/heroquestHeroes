@@ -1,0 +1,99 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/heroes" matTooltip="Retour à la liste">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Nouveau héros</h1>
+  </div>
+
+  <div class="create-layout">
+
+    <!-- Nom -->
+    <section class="section">
+      <h2 class="section-title">
+        <mat-icon>person</mat-icon>
+        Nom du héros
+      </h2>
+      <mat-form-field appearance="outline" class="name-field">
+        <mat-label>Nom</mat-label>
+        <input matInput [(ngModel)]="heroName" name="heroName" placeholder="Ex : Thorin…" maxlength="50" />
+      </mat-form-field>
+    </section>
+
+    <!-- Classe -->
+    <section class="section">
+      <h2 class="section-title">
+        <mat-icon>category</mat-icon>
+        Classe
+      </h2>
+      <div class="class-grid">
+        @for (heroClass of heroClasses; track heroClass) {
+          <div class="class-card"
+               [class.selected]="selectedClass === heroClass"
+               [style.--class-color]="classInfo[heroClass].color"
+               (click)="selectedClass = heroClass">
+            <div class="class-icon-wrap">
+              <mat-icon>{{ classInfo[heroClass].icon }}</mat-icon>
+            </div>
+            <span class="class-label">{{ classInfo[heroClass].label }}</span>
+            <div class="class-stats">
+              <div class="mini-stat">
+                <mat-icon class="health">favorite</mat-icon>
+                <span>{{ classInfo[heroClass].healthPoints }}</span>
+              </div>
+              <div class="mini-stat">
+                <mat-icon class="spirit">auto_awesome</mat-icon>
+                <span>{{ classInfo[heroClass].spiritPoints }}</span>
+              </div>
+              <div class="mini-stat">
+                <mat-icon class="attack">gavel</mat-icon>
+                <span>{{ classInfo[heroClass].attackPoints }}</span>
+              </div>
+              <div class="mini-stat">
+                <mat-icon class="defence">security</mat-icon>
+                <span>{{ classInfo[heroClass].defencePoints }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Notes (optionnel) -->
+    <section class="section">
+      <h2 class="section-title">
+        <mat-icon>notes</mat-icon>
+        Notes <span class="optional-label">(optionnel)</span>
+      </h2>
+      <mat-form-field appearance="outline" class="comment-field">
+        <mat-label>Notes & observations</mat-label>
+        <textarea matInput [(ngModel)]="heroComment" name="heroComment"
+                  rows="3" placeholder="Blessures, quêtes en cours, objets convoités…"></textarea>
+        <mat-icon matSuffix>notes</mat-icon>
+      </mat-form-field>
+    </section>
+
+    @if (error()) {
+      <div class="error-banner">
+        <mat-icon>error_outline</mat-icon>
+        {{ error() }}
+      </div>
+    }
+
+    <div class="form-actions">
+      <a mat-stroked-button routerLink="/heroes">Annuler</a>
+      <button mat-flat-button
+              color="primary"
+              [disabled]="!heroName.trim() || submitting()"
+              (click)="submit()">
+        @if (submitting()) {
+          <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+          <mat-icon>add</mat-icon>
+          Créer le héros
+        }
+      </button>
+    </div>
+
+  </div>
+</div>

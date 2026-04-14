@@ -1,10 +1,148 @@
-/* You can add global styles to this file, and also import other style files */
+/* ═══════════════════════════════════════════════════════════════════
+   HeroQuest — Global Styles
+   ═══════════════════════════════════════════════════════════════════ */
 
-html, body {
-  height: 100%;
+/* ── Fond donjon ───────────────────────────────────────────────────── */
+body {
+  font-family: 'IM Fell English', 'Palatino Linotype', Georgia, serif;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(150, 80, 5, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 70% at 85% 85%, rgba(120, 40, 5, 0.06) 0%, transparent 60%),
+    repeating-linear-gradient(
+      0deg, transparent, transparent 59px,
+      rgba(0, 0, 0, 0.06) 59px, rgba(0, 0, 0, 0.06) 60px
+    ),
+    repeating-linear-gradient(
+      90deg, transparent, transparent 79px,
+      rgba(0, 0, 0, 0.06) 79px, rgba(0, 0, 0, 0.06) 80px
+    ),
+    #0a0806;
+  min-height: 100vh;
 }
 
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+/* ── Typographie ───────────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', serif;
+  letter-spacing: 1.5px;
+}
+
+/* ── Scrollbar stylisée ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0a0806; }
+::-webkit-scrollbar-thumb {
+  background: #4a3810;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: #8b6a20; }
+
+/* ── Material component overrides ──────────────────────────────────── */
+
+/* Cartes : parchemin sombre */
+.mat-mdc-card {
+  background: linear-gradient(145deg, #1c1810 0%, #14110a 60%, #191510 100%) !important;
+  border: 1px solid var(--hq-border) !important;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(201, 168, 76, 0.06) !important;
+}
+
+/* Boutons plats (primary) */
+.mat-mdc-unelevated-button.mat-primary {
+  background: linear-gradient(135deg, #c9a84c, #a8862a) !important;
+  color: #120e02 !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  box-shadow: 0 2px 8px rgba(201, 168, 76, 0.3) !important;
+}
+.mat-mdc-unelevated-button.mat-primary:hover {
+  box-shadow: 0 4px 16px rgba(201, 168, 76, 0.5) !important;
+}
+
+/* Bouton FAB */
+.mat-mdc-fab {
+  background: linear-gradient(135deg, #c9a84c, #a8862a) !important;
+  color: #120e02 !important;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.4) !important;
+}
+.mat-mdc-fab:hover {
+  box-shadow: 0 6px 28px rgba(201, 168, 76, 0.6) !important;
+}
+
+/* Boutons contour */
+.mat-mdc-outlined-button {
+  border-color: var(--hq-border-bright) !important;
+  color: var(--hq-gold) !important;
+  font-family: 'Cinzel', serif !important;
+  letter-spacing: 0.8px !important;
+}
+.mat-mdc-outlined-button:hover {
+  border-color: var(--hq-gold) !important;
+  background: rgba(201, 168, 76, 0.08) !important;
+}
+
+/* Bouton warn */
+.mat-mdc-outlined-button.mat-warn {
+  border-color: var(--hq-crimson) !important;
+  color: var(--hq-crimson-bright) !important;
+}
+.mat-mdc-outlined-button.mat-warn:hover {
+  border-color: var(--hq-crimson-bright) !important;
+  background: rgba(139, 32, 32, 0.15) !important;
+}
+
+/* Bouton icon */
+.mat-mdc-icon-button {
+  color: var(--hq-parchment-dim) !important;
+}
+.mat-mdc-icon-button:hover {
+  color: var(--hq-gold) !important;
+  background: rgba(201, 168, 76, 0.1) !important;
+}
+
+/* Spinner */
+.mat-mdc-progress-spinner circle {
+  stroke: var(--hq-gold) !important;
+}
+
+/* Divider */
+.mat-divider {
+  border-color: var(--hq-border) !important;
+}
+
+/* Form fields */
+.mat-mdc-form-field .mdc-notched-outline__leading,
+.mat-mdc-form-field .mdc-notched-outline__notch,
+.mat-mdc-form-field .mdc-notched-outline__trailing {
+  border-color: var(--hq-border) !important;
+}
+.mat-mdc-form-field:hover .mdc-notched-outline__leading,
+.mat-mdc-form-field:hover .mdc-notched-outline__notch,
+.mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+  border-color: var(--hq-border-bright) !important;
+}
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--hq-gold) !important;
+}
+.mat-mdc-form-field-label,
+.mdc-floating-label {
+  color: var(--hq-parchment-dim) !important;
+  font-family: 'IM Fell English', serif !important;
+}
+.mat-mdc-form-field.mat-focused .mdc-floating-label {
+  color: var(--hq-gold) !important;
+}
+.mdc-text-field__input {
+  color: var(--hq-parchment) !important;
+  font-family: 'IM Fell English', serif !important;
+}
+
+/* Tooltip */
+.mat-mdc-tooltip {
+  background: #1e1a10 !important;
+  color: var(--hq-parchment) !important;
+  border: 1px solid var(--hq-border) !important;
+  font-family: 'IM Fell English', serif !important;
 }

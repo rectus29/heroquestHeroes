@@ -1,0 +1,88 @@
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$orange-palette,
+        tertiary: mat.$red-palette,
+        theme-type: dark,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+
+  // ── HeroQuest palette ────────────────────────────────────────────────────
+  --hq-gold:           #c9a84c;
+  --hq-gold-dim:       #8b6a1e;
+  --hq-gold-bright:    #e8c96a;
+  --hq-crimson:        #8b2020;
+  --hq-crimson-bright: #c04040;
+  --hq-parchment:      #e8d5a0;
+  --hq-parchment-dim:  #a89060;
+  --hq-stone:          #0a0806;
+  --hq-stone-mid:      #14110a;
+  --hq-stone-light:    #1e1a10;
+  --hq-border:         #4a3810;
+  --hq-border-bright:  #8b6a20;
+
+  // ── Override Material system tokens ─────────────────────────────────────
+  --mat-sys-primary:                    var(--hq-gold);
+  --mat-sys-on-primary:                 #120e02;
+  --mat-sys-primary-container:          #2a2008;
+  --mat-sys-on-primary-container:       var(--hq-gold-bright);
+  --mat-sys-primary-fixed:              #3a2e0a;
+  --mat-sys-primary-fixed-dim:          var(--hq-gold-dim);
+  --mat-sys-on-primary-fixed:           var(--hq-parchment);
+  --mat-sys-on-primary-fixed-variant:   var(--hq-parchment-dim);
+
+  --mat-sys-secondary:                  var(--hq-crimson-bright);
+  --mat-sys-on-secondary:               #180404;
+  --mat-sys-secondary-container:        #2e0c0c;
+  --mat-sys-on-secondary-container:     #f0a0a0;
+
+  --mat-sys-tertiary:                   #a07060;
+  --mat-sys-on-tertiary:                #1a0a06;
+  --mat-sys-tertiary-container:         #2a1208;
+  --mat-sys-on-tertiary-container:      #d0a890;
+
+  --mat-sys-background:                 var(--hq-stone);
+  --mat-sys-on-background:              var(--hq-parchment);
+
+  --mat-sys-surface:                    var(--hq-stone-mid);
+  --mat-sys-surface-dim:                var(--hq-stone);
+  --mat-sys-surface-bright:             #222010;
+  --mat-sys-surface-container-lowest:   #06050300;
+  --mat-sys-surface-container-low:      var(--hq-stone-mid);
+  --mat-sys-surface-container:          var(--hq-stone-light);
+  --mat-sys-surface-container-high:     #201c10;
+  --mat-sys-surface-container-highest:  #282410;
+  --mat-sys-on-surface:                 var(--hq-parchment);
+  --mat-sys-on-surface-variant:         var(--hq-parchment-dim);
+
+  --mat-sys-outline:                    var(--hq-border-bright);
+  --mat-sys-outline-variant:            var(--hq-border);
+
+  --mat-sys-error:                      #e07070;
+  --mat-sys-on-error:                   #180404;
+  --mat-sys-error-container:            #3a0e0e;
+  --mat-sys-on-error-container:         #f0a0a0;
+
+  --mat-sys-inverse-surface:            var(--hq-parchment);
+  --mat-sys-inverse-on-surface:         #1a1608;
+  --mat-sys-inverse-primary:            var(--hq-gold-dim);
+
+  --mat-sys-scrim:                       rgba(0, 0, 0, 0.8);
+  --mat-sys-shadow:                      rgba(0, 0, 0, 0.9);
+}
+
+body {
+  color-scheme: dark;
+  background-color: var(--hq-stone);
+  color: var(--hq-parchment);
+  margin: 0;
+  height: 100%;
+}

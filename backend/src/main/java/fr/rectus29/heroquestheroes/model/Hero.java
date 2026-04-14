@@ -1,6 +1,7 @@
 package fr.rectus29.heroquestheroes.model;
 
 
+import fr.rectus29.heroquestheroes.enums.Quest;
 import fr.rectus29.heroquestheroes.enums.HeroClass;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,5 +31,7 @@ public class Hero extends GenericEntity {
     private int defencePoints = 0;
     private List<GoldEntry> goldEntries = new ArrayList<>();
     private List<Stuff> equipements = new ArrayList<>();
+    private String comment;
+    private List<Quest> completedQuests = new ArrayList<>();
 
 }

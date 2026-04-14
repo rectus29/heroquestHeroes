@@ -1,5 +1,6 @@
 package fr.rectus29.heroquestheroes.dto;
 
+import fr.rectus29.heroquestheroes.enums.Quest;
 import fr.rectus29.heroquestheroes.enums.HeroClass;
 import fr.rectus29.heroquestheroes.model.GoldEntry;
 import fr.rectus29.heroquestheroes.model.Hero;
@@ -28,6 +29,8 @@ public class HeroDTO {
     private int resolvedAttackPoints = 0;
     private int resolvedDefencePoints = 0;
 
+    private String comment;
+    private List<Quest> completedQuests = new ArrayList<>();
 
     private List<StuffDTO> equipements = new ArrayList<>();
 
@@ -42,6 +45,8 @@ public class HeroDTO {
                 .setDefencePoints(hero.getDefencePoints())
                 .setGoldAmount(hero.getGoldEntries().stream().map(GoldEntry::getAmount).reduce(0, Integer::sum))
                 .setEquipements(hero.getEquipements().stream().map(StuffDTO::from).toList())
+                .setComment(hero.getComment())
+                .setCompletedQuests(new ArrayList<>(hero.getCompletedQuests()))
                 .setResolvedAttackPoints(HeroUtils.resolveAttackPoint(hero))
                 .setResolvedDefencePoints(HeroUtils.resolveDefencePoint(hero));
 
@@ -62,8 +67,9 @@ public class HeroDTO {
 
         public static StuffDTO from(Stuff stuff) {
             return new StuffDTO()
-                    .setName(stuff.getName())
-                    .setDesc(stuff.getDesc()).setAttributes(stuff.getAttributesList().stream().map(attrib -> new StuffAttributeDTO().setDogme(attrib.getDogma().name()).setValue(attrib.getValue())).toList());
+                    .setName(stuff.getEquipment().getLabel())
+                    .setDesc(stuff.getEquipment().getDescription())
+                    .setAttributes(stuff.getAttributesList().stream().map(attrib -> new StuffAttributeDTO().setDogme(attrib.getDogma().name()).setValue(attrib.getValue())).toList());
         }
     }
 }

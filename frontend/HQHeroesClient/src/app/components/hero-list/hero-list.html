@@ -1,0 +1,92 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-title">
+      <mat-icon class="title-icon">shield</mat-icon>
+      <h1>Héros de HeroQuest</h1>
+    </div>
+    <a mat-fab routerLink="/heroes/new" matTooltip="Créer un héros" aria-label="Créer un héros">
+      <mat-icon>add</mat-icon>
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="centered">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>Chargement des héros…</p>
+    </div>
+  } @else if (error()) {
+    <div class="centered error-state">
+      <mat-icon class="big-icon">error_outline</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-stroked-button (click)="ngOnInit()">
+        <mat-icon>refresh</mat-icon>
+        Réessayer
+      </button>
+    </div>
+  } @else if (heroes().length === 0) {
+    <div class="centered empty-state">
+      <mat-icon class="big-icon">person_search</mat-icon>
+      <p>Aucun héros pour l'instant.</p>
+      <a mat-flat-button routerLink="/heroes/new">
+        <mat-icon>add</mat-icon>
+        Créer le premier héros
+      </a>
+    </div>
+  } @else {
+    <div class="heroes-grid">
+      @for (hero of heroes(); track hero.id) {
+        <mat-card class="hero-card" [routerLink]="['/heroes', hero.id]">
+          <mat-card-header>
+            <div class="class-badge" [style.background-color]="getClassInfo(hero.heroClass).color">
+              <mat-icon>{{ getClassInfo(hero.heroClass).icon }}</mat-icon>
+              {{ getClassInfo(hero.heroClass).label }}
+            </div>
+            <mat-card-title>{{ hero.name }}</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="stats-grid">
+              <div class="stat">
+                <mat-icon class="stat-icon health">favorite</mat-icon>
+                <span class="stat-value">{{ hero.healthPoints }}</span>
+                <span class="stat-label">PV</span>
+              </div>
+              <div class="stat">
+                <mat-icon class="stat-icon spirit">auto_awesome</mat-icon>
+                <span class="stat-value">{{ hero.spiritPoints }}</span>
+                <span class="stat-label">PE</span>
+              </div>
+              <div class="stat">
+                <mat-icon class="stat-icon attack">gavel</mat-icon>
+                <span class="stat-value">{{ hero.resolvedAttackPoints }}</span>
+                <span class="stat-label">ATK</span>
+              </div>
+              <div class="stat">
+                <mat-icon class="stat-icon defence">security</mat-icon>
+                <span class="stat-value">{{ hero.resolvedDefencePoints }}</span>
+                <span class="stat-label">DEF</span>
+              </div>
+            </div>
+            <div class="gold-row">
+              <mat-icon class="gold-icon">paid</mat-icon>
+              <span>{{ hero.goldAmount }} pièces d'or</span>
+            </div>
+            @if (hero.equipements.length > 0) {
+              <div class="equip-row">
+                <mat-icon>backpack</mat-icon>
+                <span>{{ hero.equipements.length }} équipement(s)</span>
+              </div>
+            }
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-button color="primary">
+              <mat-icon>visibility</mat-icon>
+              Voir le détail
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

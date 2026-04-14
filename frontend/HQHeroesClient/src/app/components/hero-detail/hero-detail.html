@@ -1,0 +1,284 @@
+<div class="page-container">
+
+  <!-- En-tête -->
+  <div class="page-header">
+    <button mat-icon-button routerLink="/heroes" matTooltip="Retour à la liste">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    @if (hero()) {
+      <div class="class-badge" [style.background-color]="getClassInfo(hero()!.heroClass).color">
+        <mat-icon>{{ getClassInfo(hero()!.heroClass).icon }}</mat-icon>
+        {{ getClassInfo(hero()!.heroClass).label }}
+      </div>
+      <h1>{{ hero()!.name }}</h1>
+    }
+    <span class="spacer"></span>
+    @if (hero() && !editMode()) {
+      <button mat-stroked-button (click)="startEdit()" matTooltip="Modifier le héros">
+        <mat-icon>edit</mat-icon>
+        Modifier
+      </button>
+      <button mat-stroked-button color="warn" (click)="delete()" matTooltip="Supprimer le héros">
+        <mat-icon>delete</mat-icon>
+        Supprimer
+      </button>
+    }
+  </div>
+
+  <!-- Chargement -->
+  @if (loading()) {
+    <div class="centered">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>Chargement…</p>
+    </div>
+
+  <!-- Erreur -->
+  } @else if (error()) {
+    <div class="centered error-state">
+      <mat-icon class="big-icon">error_outline</mat-icon>
+      <p>{{ error() }}</p>
+      <a mat-stroked-button routerLink="/heroes">
+        <mat-icon>arrow_back</mat-icon>
+        Retour à la liste
+      </a>
+    </div>
+
+  } @else if (hero()) {
+
+    <!-- Mode consultation -->
+    @if (!editMode()) {
+      <div class="detail-layout">
+
+        <!-- Stats -->
+        <mat-card class="stats-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>bar_chart</mat-icon>
+              Statistiques
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="stats-grid">
+              <div class="stat-cell">
+                <mat-icon class="health">favorite</mat-icon>
+                <span class="stat-value">{{ hero()!.healthPoints }}</span>
+                <span class="stat-label">Points de Vie</span>
+              </div>
+              <div class="stat-cell">
+                <mat-icon class="spirit">auto_awesome</mat-icon>
+                <span class="stat-value">{{ hero()!.spiritPoints }}</span>
+                <span class="stat-label">Points d'Esprit</span>
+              </div>
+              <div class="stat-cell">
+                <mat-icon class="attack">gavel</mat-icon>
+                <span class="stat-value">{{ hero()!.resolvedAttackPoints }}</span>
+                <span class="stat-label">Attaque</span>
+                @if (hero()!.resolvedAttackPoints !== hero()!.attackPoints) {
+                  <span class="base-value">base : {{ hero()!.attackPoints }}</span>
+                }
+              </div>
+              <div class="stat-cell">
+                <mat-icon class="defence">security</mat-icon>
+                <span class="stat-value">{{ hero()!.resolvedDefencePoints }}</span>
+                <span class="stat-label">Défense</span>
+                @if (hero()!.resolvedDefencePoints !== hero()!.defencePoints) {
+                  <span class="base-value">base : {{ hero()!.defencePoints }}</span>
+                }
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="gold-row">
+              <mat-icon class="gold-icon">paid</mat-icon>
+              <span class="gold-value">{{ hero()!.goldAmount }}</span>
+              <span>pièces d'or</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Quêtes -->
+        <mat-card class="quests-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>menu_book</mat-icon>
+              Quêtes
+              <span class="quest-progress-label">
+                {{ hero()!.completedQuests.length }} / {{ allQuests().length }}
+              </span>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="quest-list">
+              @for (quest of allQuests(); track quest.id) {
+                @if (hero()!.completedQuests.includes(quest.id)) {
+                  <div class="quest-row quest-done">
+                    <mat-icon class="quest-status-icon">check_circle</mat-icon>
+                    <span class="quest-number">{{ quest.number }}</span>
+                    <span class="quest-title">{{ quest.title }}</span>
+                    @if (quest.rewardNotes) {
+                      <span class="quest-reward">
+                        <mat-icon>workspace_premium</mat-icon>{{ quest.rewardNotes }}
+                      </span>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Commentaire -->
+          <mat-card class="comment-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>notes</mat-icon>
+                Notes
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p class="comment-text">{{ hero()!.comment }}</p>
+            </mat-card-content>
+          </mat-card>
+        
+
+        <!-- Équipement -->
+        <mat-card class="equip-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>backpack</mat-icon>
+              Équipement
+              @if (hero()!.equipements.length > 0) {
+                <span class="equip-count">({{ hero()!.equipements.length }})</span>
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (hero()!.equipements.length === 0) {
+              <div class="empty-equip">
+                <mat-icon>inventory_2</mat-icon>
+                <span>Aucun équipement</span>
+              </div>
+            } @else {
+              <div class="equip-list">
+                @for (item of hero()!.equipements; track item.name) {
+                  <div class="equip-item">
+                    <div class="equip-header">
+                      <mat-icon>shield</mat-icon>
+                      <span class="equip-name">{{ item.name }}</span>
+                    </div>
+                    @if (item.desc) {
+                      <p class="equip-desc">{{ item.desc }}</p>
+                    }
+                    @if (item.attributes.length > 0) {
+                      <div class="equip-attrs">
+                        @for (attr of item.attributes; track attr.dogme) {
+                          <span class="attr-chip" [class]="getDogmeClass(attr.dogme)">
+                            <mat-icon>{{ getDogmeIcon(attr.dogme) }}</mat-icon>
+                            {{ getDogmeLabel(attr.dogme) }} {{ attr.value > 0 ? '+' : '' }}{{ attr.value }}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+    <!-- Mode édition -->
+    } @else {
+      <div class="edit-layout">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>edit</mat-icon>
+              Modifier le héros
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="edit-form">
+
+              <mat-form-field appearance="outline">
+                <mat-label>Nom</mat-label>
+                <input matInput [(ngModel)]="editName" name="editName" />
+                <mat-icon matSuffix>person</mat-icon>
+              </mat-form-field>
+
+              <h3 class="edit-section-title">Vie & Esprit</h3>
+              <div class="edit-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Points de Vie</mat-label>
+                  <input matInput type="number" [(ngModel)]="editHealthPoints" name="editHP" min="0" />
+                  <mat-icon matSuffix class="health">favorite</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Points d'Esprit</mat-label>
+                  <input matInput type="number" [(ngModel)]="editSpiritPoints" name="editPE" min="0" />
+                  <mat-icon matSuffix class="spirit">auto_awesome</mat-icon>
+                </mat-form-field>
+              </div>
+
+              <h3 class="edit-section-title">Combat (valeurs de base)</h3>
+              <div class="edit-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Attaque</mat-label>
+                  <input matInput type="number" [(ngModel)]="editAttackPoints" name="editATK" min="0" />
+                  <mat-icon matSuffix class="attack">gavel</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Défense</mat-label>
+                  <input matInput type="number" [(ngModel)]="editDefencePoints" name="editDEF" min="0" />
+                  <mat-icon matSuffix class="defence">security</mat-icon>
+                </mat-form-field>
+              </div>
+
+              <h3 class="edit-section-title">Or</h3>
+              <mat-form-field appearance="outline" class="gold-field">
+                <mat-label>Pièces d'or</mat-label>
+                <input matInput type="number" [(ngModel)]="editGoldAmount" name="editGold" min="0" />
+                <mat-icon matSuffix class="gold-icon">paid</mat-icon>
+              </mat-form-field>
+
+              <h3 class="edit-section-title">Quêtes terminées</h3>
+              <div class="quest-checklist">
+                @for (quest of allQuests(); track quest.id) {
+                  <div class="quest-check-row" [class.quest-check-done]="isQuestCompleted(quest.id)"
+                       (click)="toggleQuest(quest.id)">
+                    <mat-icon class="quest-check-icon">
+                      {{ isQuestCompleted(quest.id) ? 'check_box' : 'check_box_outline_blank' }}
+                    </mat-icon>
+                    <span class="quest-check-num">{{ quest.number }}</span>
+                    <span class="quest-check-title">{{ quest.title }}</span>
+                  </div>
+                }
+              </div>
+
+              <h3 class="edit-section-title">Notes</h3>
+              <mat-form-field appearance="outline">
+                <mat-label>Notes & observations</mat-label>
+                <textarea matInput [(ngModel)]="editComment" name="editComment"
+                          rows="4" placeholder="Blessures, quêtes en cours, objets convoités…"></textarea>
+                <mat-icon matSuffix>notes</mat-icon>
+              </mat-form-field>
+
+            </div>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <button mat-stroked-button (click)="cancelEdit()" [disabled]="saving()">
+              Annuler
+            </button>
+            <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
+              @if (saving()) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                <mat-icon>save</mat-icon>
+                Sauvegarder
+              }
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    }
+  }
+</div>

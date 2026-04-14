@@ -1,0 +1,507 @@
+/* ══════════════════════════════════════════════════
+   Hero Detail — HeroQuest style
+   ══════════════════════════════════════════════════ */
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+/* ── En-tête ─────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hq-border);
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hq-gold), transparent);
+}
+
+.page-header h1 {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--hq-parchment);
+  text-shadow: 0 0 20px rgba(201, 168, 76, 0.2);
+}
+
+.spacer { flex: 1; }
+
+/* Badge de classe */
+.class-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 2px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.class-badge mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ── Layout consultation ─────────────────────────── */
+.detail-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Titres de cartes */
+mat-card-title {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase;
+  color: var(--hq-gold) !important;
+}
+
+mat-card-title mat-icon {
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--hq-gold);
+}
+
+/* ── Grille de stats ─────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.stat-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 18px 12px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--hq-border);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Coin décoratif */
+.stat-cell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--hq-border-bright), transparent);
+}
+
+.stat-cell mat-icon {
+  font-size: 1.6rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-bottom: 2px;
+}
+
+.stat-value {
+  font-family: 'Cinzel', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--hq-parchment);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.stat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  color: var(--hq-parchment-dim);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.base-value {
+  font-family: 'IM Fell English', serif;
+  font-size: 0.68rem;
+  font-style: italic;
+  color: var(--hq-parchment-dim);
+  opacity: 0.6;
+}
+
+.health  { color: #ef5350; }
+.spirit  { color: #64b5f6; }
+.attack  { color: #ffa040; }
+.defence { color: #81c784; }
+
+/* ── Or ──────────────────────────────────────────── */
+.gold-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0 0;
+  font-family: 'IM Fell English', serif;
+  font-size: 1rem;
+  color: var(--hq-parchment-dim);
+}
+
+.gold-icon  { color: var(--hq-gold) !important; }
+.gold-value {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--hq-gold);
+  text-shadow: 0 0 10px rgba(201, 168, 76, 0.3);
+}
+
+/* ── Progression des quêtes (vue) ───────────────── */
+.quest-progress-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  color: var(--hq-gold);
+  margin-left: 8px;
+}
+
+
+.quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.quest-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 3px;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.88rem;
+  color: var(--hq-parchment-dim);
+  opacity: 0.5;
+}
+
+.quest-row.quest-done {
+  opacity: 1;
+  background: rgba(201, 168, 76, 0.05);
+  border-left: 2px solid var(--hq-gold-dim);
+  color: var(--hq-parchment);
+}
+
+
+/* ── Checklist quêtes (édition) ─────────────────── */
+.quest-checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.quest-check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.88rem;
+  color: var(--hq-parchment-dim);
+  border: 1px solid transparent;
+  transition: background 0.15s, border-color 0.15s;
+  user-select: none;
+}
+
+.quest-check-row:hover {
+  background: rgba(201, 168, 76, 0.06);
+  border-color: var(--hq-border);
+}
+
+.quest-check-row.quest-check-done {
+  color: var(--hq-parchment);
+  background: rgba(201, 168, 76, 0.07);
+  border-color: var(--hq-border);
+}
+
+.quest-check-icon {
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  color: var(--hq-border-bright);
+}
+
+.quest-check-done .quest-check-icon {
+  color: var(--hq-gold);
+}
+
+.quest-check-num {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 20px;
+  color: var(--hq-parchment-dim);
+}
+
+.quest-check-done .quest-check-num {
+  color: var(--hq-gold);
+}
+
+.quest-check-title {
+  flex: 1;
+}
+
+.quest-status-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--hq-border-bright);
+}
+
+.quest-done .quest-status-icon {
+  color: var(--hq-gold);
+}
+
+.quest-number {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  min-width: 22px;
+  color: var(--hq-parchment-dim);
+}
+
+.quest-done .quest-number {
+  color: var(--hq-gold);
+}
+
+.quest-title {
+  flex: 1;
+}
+
+.quest-reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.75rem;
+  color: var(--hq-gold);
+  font-style: italic;
+}
+
+.quest-reward mat-icon {
+  font-size: 0.85rem;
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+
+/* ── Commentaire ─────────────────────────────────── */
+
+.comment-text {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--hq-parchment-dim);
+  margin: 8px 0 0;
+  white-space: pre-wrap;
+  border-left: 2px solid var(--hq-border-bright);
+  padding-left: 14px;
+}
+
+/* ── Équipement ──────────────────────────────────── */
+.empty-equip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px;
+  opacity: 0.35;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+}
+
+.empty-equip mat-icon {
+  font-size: 2.8rem;
+  width: 2.8rem;
+  height: 2.8rem;
+}
+
+.equip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.equip-item {
+  padding: 12px 14px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--hq-border);
+  border-left: 3px solid var(--hq-gold-dim);
+}
+
+.equip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.equip-header mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  color: var(--hq-gold-dim);
+}
+
+.equip-name {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.8px;
+  color: var(--hq-parchment);
+}
+
+.equip-desc {
+  margin: 4px 0 8px;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--hq-parchment-dim);
+}
+
+.equip-attrs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.attr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--hq-border);
+}
+
+.attr-chip mat-icon {
+  font-size: 0.8rem;
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.attr-chip.health  { color: #ef5350; border-color: rgba(239,83,80,0.3); }
+.attr-chip.spirit  { color: #64b5f6; border-color: rgba(100,181,246,0.3); }
+.attr-chip.attack  { color: #ffa040; border-color: rgba(255,160,64,0.3); }
+.attr-chip.defence { color: #81c784; border-color: rgba(129,199,132,0.3); }
+
+.equip-count {
+  font-family: 'IM Fell English', serif;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-left: 4px;
+}
+
+/* ── Mode édition ────────────────────────────────── */
+.edit-layout { width: 100%; }
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 16px;
+}
+
+.edit-form mat-form-field { width: 100%; }
+
+.edit-section-title {
+  margin: 12px 0 0;
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--hq-gold);
+  position: relative;
+  padding-left: 10px;
+}
+
+.edit-section-title::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--hq-gold);
+  font-size: 0.65rem;
+}
+
+.edit-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.gold-field { max-width: 220px; }
+
+/* ── États communs ───────────────────────────────── */
+.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.centered p {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--hq-parchment-dim);
+}
+
+.big-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+  opacity: 0.4;
+  color: var(--hq-parchment-dim);
+}
+
+.error-state .big-icon {
+  color: #e07070;
+  opacity: 0.8;
+}
