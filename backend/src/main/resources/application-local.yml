@@ -1,0 +1,7 @@
+# 4 DEV ONLY
+spring:
+  data:
+    mongodb:
+      #uri: mongodb+srv://rectus29:Bw8sWCePLUwe9Tqc@cluster0.zq7gk5d.mongodb.net/?retryWrites=true&w=majority
+      uri: mongodb://127.0.0.1:37017
+      database: HQHeroes
