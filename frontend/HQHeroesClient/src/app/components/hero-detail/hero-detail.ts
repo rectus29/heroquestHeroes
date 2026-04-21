@@ -1,4 +1,5 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,13 +12,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HeroService } from '../../services/hero.service';
 import { QuestBookService } from '../../services/quest-book.service';
-import { HeroDTO, HeroUpdateRequest } from '../../models/hero.model';
+import { GoldEntryDTO, HeroDTO, HeroUpdateRequest } from '../../models/hero.model';
 import { HERO_CLASS_INFO, HeroClass } from '../../models/hero-class.enum';
 import { QuestBookEntry } from '../../models/base-quest-book';
 
 @Component({
   selector: 'app-hero-detail',
   imports: [
+    DatePipe,
     RouterLink,
     FormsModule,
     MatButtonModule,
@@ -52,9 +54,13 @@ export class HeroDetail implements OnInit {
   editSpiritPoints = 0;
   editAttackPoints = 0;
   editDefencePoints = 0;
-  editGoldAmount = 0;
+  editGoldEntries: GoldEntryDTO[] = [];
   editComment = '';
   editCompletedQuests: string[] = [];
+
+  // Formulaire d'ajout d'une entrée d'or
+  newEntryAmount = 0;
+  newEntryComment = '';
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -100,6 +106,28 @@ export class HeroDetail implements OnInit {
     return classes[dogme] ?? '';
   }
 
+  // ── Édition gold journal ────────────────────────────────────────────────
+
+  editGoldTotal(): number {
+    return this.editGoldEntries.reduce((sum, e) => sum + e.amount, 0);
+  }
+
+  addGoldEntry(): void {
+    if (this.newEntryAmount === 0) return;
+    this.editGoldEntries = [
+      ...this.editGoldEntries,
+      { amount: this.newEntryAmount, comment: this.newEntryComment || null, date: new Date().toISOString() },
+    ];
+    this.newEntryAmount = 0;
+    this.newEntryComment = '';
+  }
+
+  removeGoldEntry(index: number): void {
+    this.editGoldEntries = this.editGoldEntries.filter((_, i) => i !== index);
+  }
+
+  // ── Mode édition ─────────────────────────────────────────────────────────
+
   startEdit(): void {
     const hero = this.hero()!;
     this.editName = hero.name;
@@ -107,9 +135,11 @@ export class HeroDetail implements OnInit {
     this.editSpiritPoints = hero.spiritPoints;
     this.editAttackPoints = hero.attackPoints;
     this.editDefencePoints = hero.defencePoints;
-    this.editGoldAmount = hero.goldAmount;
+    this.editGoldEntries = [...(hero.goldEntries ?? [])];
     this.editComment = hero.comment ?? '';
     this.editCompletedQuests = [...(hero.completedQuests ?? [])];
+    this.newEntryAmount = 0;
+    this.newEntryComment = '';
     this.editMode.set(true);
   }
 
@@ -127,7 +157,7 @@ export class HeroDetail implements OnInit {
       spiritPoints: this.editSpiritPoints,
       attackPoints: this.editAttackPoints,
       defencePoints: this.editDefencePoints,
-      goldAmount: this.editGoldAmount,
+      goldEntries: this.editGoldEntries,
       comment: this.editComment || null,
       completedQuests: this.editCompletedQuests,
       equipements: hero.equipements,

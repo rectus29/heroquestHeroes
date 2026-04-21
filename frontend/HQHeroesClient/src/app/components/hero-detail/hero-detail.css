@@ -321,6 +321,126 @@ mat-card-title mat-icon {
 }
 
 
+/* ── Journal d'or (vue) ─────────────────────────── */
+.gold-journal {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.journal-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px;
+  border-radius: 2px;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.82rem;
+  color: var(--hq-parchment-dim);
+  border-left: 2px solid var(--hq-border);
+}
+
+.journal-entry.credit { border-left-color: #81c784; }
+.journal-entry.debit  { border-left-color: #ef5350; }
+
+.journal-amount {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 40px;
+}
+
+.journal-entry.credit .journal-amount { color: #81c784; }
+.journal-entry.debit  .journal-amount { color: #ef5350; }
+
+.journal-comment { flex: 1; font-style: italic; }
+
+.journal-date {
+  font-size: 0.72rem;
+  opacity: 0.5;
+  white-space: nowrap;
+}
+
+/* ── Journal d'or (édition) ─────────────────────── */
+.gold-edit-total {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  color: var(--hq-gold);
+  margin-left: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.gold-edit-total mat-icon {
+  font-size: 0.9rem;
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.gold-journal-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+
+.journal-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px;
+  border-radius: 2px;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.85rem;
+  color: var(--hq-parchment-dim);
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 2px solid var(--hq-border);
+}
+
+.journal-edit-row.credit { border-left-color: #81c784; }
+.journal-edit-row.debit  { border-left-color: #ef5350; }
+
+.journal-edit-row .journal-amount {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 44px;
+}
+
+.journal-edit-row.credit .journal-amount { color: #81c784; }
+.journal-edit-row.debit  .journal-amount { color: #ef5350; }
+
+.journal-edit-row .journal-comment { flex: 1; font-style: italic; }
+
+.journal-delete-btn {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  opacity: 0.5;
+}
+
+.journal-delete-btn:hover { opacity: 1; }
+
+.journal-delete-btn mat-icon {
+  font-size: 0.9rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  color: #ef5350;
+}
+
+.gold-add-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.gold-amount-field  { max-width: 130px; }
+.gold-comment-field { flex: 1; }
+
 /* ── Commentaire ─────────────────────────────────── */
 
 .comment-text {

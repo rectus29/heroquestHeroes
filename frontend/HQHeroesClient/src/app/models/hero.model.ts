@@ -11,6 +11,12 @@ export interface StuffDTO {
   attributes: StuffAttributeDTO[];
 }
 
+export interface GoldEntryDTO {
+  amount: number;
+  comment: string | null;
+  date: string | null;
+}
+
 export interface HeroDTO {
   id: string;
   name: string;
@@ -22,6 +28,7 @@ export interface HeroDTO {
   resolvedAttackPoints: number;
   resolvedDefencePoints: number;
   goldAmount: number;
+  goldEntries: GoldEntryDTO[];
   comment: string | null;
   completedQuests: string[];
   equipements: StuffDTO[];
@@ -46,7 +53,7 @@ export interface HeroUpdateRequest {
   spiritPoints: number;
   attackPoints: number;
   defencePoints: number;
-  goldAmount: number;
+  goldEntries: GoldEntryDTO[];
   comment: string | null;
   completedQuests: string[];
   equipements: StuffDTO[];

@@ -2,7 +2,7 @@ package fr.rectus29.heroquestheroes.controllers;
 
 import fr.rectus29.heroquestheroes.dto.QuestDTO;
 import fr.rectus29.heroquestheroes.enums.Quest;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotationr.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

@@ -54,12 +54,9 @@ public class HeroController {
                 .setSpiritPoints(request.getSpiritPoints())
                 .setAttackPoints(request.getAttackPoints())
                 .setDefencePoints(request.getDefencePoints())
+                .setGoldEntries(request.getGoldEntries())
                 .setComment(request.getComment())
                 .setCompletedQuests(request.getCompletedQuests());
-        hero.getGoldEntries().clear();
-        if (request.getGoldAmount() > 0) {
-            hero.getGoldEntries().add(new GoldEntry(request.getGoldAmount()));
-        }
         return HeroDTO.from(heroService.save(hero));
     }
 

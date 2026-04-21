@@ -1,0 +1,334 @@
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+/* ── En-tête ─────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hq-border);
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hq-gold), transparent);
+}
+
+.title-icon {
+  font-size: 1.6rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  color: var(--hq-gold);
+}
+
+.quest-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 3px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid var(--hq-gold-dim);
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  letter-spacing: 1.5px;
+  color: var(--hq-gold);
+}
+
+.quest-badge mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--hq-parchment);
+}
+
+.spacer { flex: 1; }
+
+/* ── Plateau ─────────────────────────────────────── */
+.board {
+  display: grid;
+  gap: 16px;
+}
+
+.board-1 { grid-template-columns: minmax(0, 480px); }
+.board-2 { grid-template-columns: repeat(2, 1fr); }
+.board-3 { grid-template-columns: repeat(3, 1fr); }
+.board-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 900px) {
+  .board-3, .board-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .board-2, .board-3, .board-4 { grid-template-columns: 1fr; }
+}
+
+/* ── Carte héros ─────────────────────────────────── */
+.hero-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: opacity 0.3s;
+}
+
+.hero-card.dead {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+
+.hero-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 16px 16px;
+  border-top: 3px solid;
+}
+
+.class-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 2px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.class-badge mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.hero-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--hq-parchment);
+  text-align: center;
+}
+
+.dead-label {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.8rem;
+  color: #e07070;
+}
+
+/* ── Ligne HP / SP ───────────────────────────────── */
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 16px;
+}
+
+.stat-row .stat-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  flex-shrink: 0;
+}
+
+.stat-row .stat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--hq-parchment-dim);
+  width: 22px;
+}
+
+.adj-btn {
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+}
+
+.adj-btn mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.stat-value {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--hq-parchment);
+  min-width: 2ch;
+  text-align: center;
+  flex: 1;
+}
+
+.stat-max {
+  font-family: 'IM Fell English', serif;
+  font-size: 0.85rem;
+  color: var(--hq-parchment-dim);
+  opacity: 0.6;
+  min-width: 28px;
+}
+
+.stat-row.health .stat-icon { color: #ef5350; }
+.stat-row.spirit .stat-icon { color: #64b5f6; }
+
+/* ── ATK / DEF ───────────────────────────────────── */
+.combat-row {
+  display: flex;
+  justify-content: space-around;
+  padding: 14px 16px;
+}
+
+.combat-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.combat-stat mat-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.combat-stat span:nth-child(2) {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--hq-parchment);
+}
+
+.combat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--hq-parchment-dim);
+}
+
+.combat-stat.attack mat-icon  { color: #ffa040; }
+.combat-stat.defence mat-icon { color: #81c784; }
+
+/* ── Or ──────────────────────────────────────────── */
+.gold-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px 16px;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.9rem;
+  color: var(--hq-parchment-dim);
+}
+
+.gold-icon { color: var(--hq-gold) !important; }
+
+.gold-value {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--hq-gold);
+}
+
+.gold-label { flex: 1; }
+
+/* ── Entrées en attente ──────────────────────────── */
+.pending-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 10px 6px;
+}
+
+.pending-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: 2px;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.78rem;
+  color: var(--hq-parchment-dim);
+  border-left: 2px solid var(--hq-border);
+}
+
+.pending-entry.credit { border-left-color: #81c784; }
+.pending-entry.debit  { border-left-color: #ef5350; }
+
+.pending-amount {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  min-width: 36px;
+}
+
+.pending-entry.credit .pending-amount { color: #81c784; }
+.pending-entry.debit  .pending-amount { color: #ef5350; }
+
+.pending-comment { flex: 1; font-style: italic; }
+
+.pending-del {
+  width: 22px !important;
+  height: 22px !important;
+  line-height: 22px !important;
+  opacity: 0.45;
+}
+
+.pending-del:hover { opacity: 1; }
+
+.pending-del mat-icon {
+  font-size: 0.75rem;
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+/* ── Saisie rapide d'or ──────────────────────────── */
+.gold-add-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px 10px 10px;
+}
+
+.gold-input-amount  { width: 90px; flex-shrink: 0; }
+.gold-input-comment { flex: 1; min-width: 0; }
+
+.gold-add-row mat-form-field { font-size: 0.82rem; }
+
+.gold-reward {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--hq-gold);
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid var(--hq-gold-dim);
+  border-radius: 2px;
+  padding: 2px 6px;
+}

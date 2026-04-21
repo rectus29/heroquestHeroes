@@ -1,0 +1,151 @@
+<div class="page-container">
+
+  <!-- En-tête -->
+  <div class="page-header">
+    <mat-icon class="title-icon">casino</mat-icon>
+    @if (quest()) {
+      <div class="quest-badge">
+        <mat-icon>menu_book</mat-icon>
+        Q{{ quest()!.number }} — {{ quest()!.title }}
+      </div>
+    } @else {
+      <h1>Partie libre</h1>
+    }
+    <span class="spacer"></span>
+    <button mat-stroked-button (click)="abandon()" [disabled]="saving()" matTooltip="Quitter sans sauvegarder">
+      <mat-icon>close</mat-icon>
+      Abandonner
+    </button>
+    <button mat-flat-button color="primary" (click)="endQuest()" [disabled]="saving()">
+      @if (saving()) {
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        <mat-icon>flag</mat-icon>
+        Fin de quête
+      }
+    </button>
+  </div>
+
+  <!-- Plateau -->
+  <div class="board" [class.board-1]="heroes().length === 1"
+                     [class.board-2]="heroes().length === 2"
+                     [class.board-3]="heroes().length === 3"
+                     [class.board-4]="heroes().length === 4">
+    @for (hero of heroes(); track hero.id; let i = $index) {
+      <mat-card class="hero-card" [class.dead]="isDead(i)">
+
+        <!-- Badge classe + nom -->
+        <div class="hero-header" [style.border-color]="getClassInfo(hero.heroClass).color">
+          <div class="class-badge" [style.background-color]="getClassInfo(hero.heroClass).color">
+            <mat-icon>{{ getClassInfo(hero.heroClass).icon }}</mat-icon>
+            {{ getClassInfo(hero.heroClass).label }}
+          </div>
+          <span class="hero-name">{{ hero.name }}</span>
+          @if (isDead(i)) {
+            <span class="dead-label">Hors combat</span>
+          }
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- HP -->
+        <div class="stat-row health">
+          <mat-icon class="stat-icon">favorite</mat-icon>
+          <span class="stat-label">PV</span>
+          <button mat-icon-button class="adj-btn" (click)="changeHp(i, -1)"
+                  [disabled]="liveStats()[i].hp === 0" matTooltip="−1 PV">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <span class="stat-value">{{ liveStats()[i].hp }}</span>
+          <span class="stat-max">/ {{ maxHp(hero) }}</span>
+          <button mat-icon-button class="adj-btn" (click)="changeHp(i, +1)"
+                  [disabled]="liveStats()[i].hp === maxHp(hero)" matTooltip="+1 PV">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+
+        <!-- SP -->
+        <div class="stat-row spirit">
+          <mat-icon class="stat-icon">auto_awesome</mat-icon>
+          <span class="stat-label">PE</span>
+          <button mat-icon-button class="adj-btn" (click)="changeSp(i, -1)"
+                  [disabled]="liveStats()[i].sp === 0" matTooltip="−1 PE">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <span class="stat-value">{{ liveStats()[i].sp }}</span>
+          <span class="stat-max">/ {{ maxSp(hero) }}</span>
+          <button mat-icon-button class="adj-btn" (click)="changeSp(i, +1)"
+                  [disabled]="liveStats()[i].sp === maxSp(hero)" matTooltip="+1 PE">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- ATK / DEF -->
+        <div class="combat-row">
+          <div class="combat-stat attack">
+            <mat-icon>gavel</mat-icon>
+            <span>{{ hero.resolvedAttackPoints }}</span>
+            <span class="combat-label">ATK</span>
+          </div>
+          <div class="combat-stat defence">
+            <mat-icon>security</mat-icon>
+            <span>{{ hero.resolvedDefencePoints }}</span>
+            <span class="combat-label">DEF</span>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Or -->
+        <div class="gold-row">
+          <mat-icon class="gold-icon">paid</mat-icon>
+          <span class="gold-value">{{ liveGoldTotal(i) }}</span>
+          <span class="gold-label">or</span>
+          @if (quest() && quest()!.goldRewardPerHero > 0) {
+            <span class="gold-reward">+{{ quest()!.goldRewardPerHero }}</span>
+          }
+        </div>
+
+        <!-- Entrées en attente -->
+        @if (liveStats()[i].pendingGoldEntries.length > 0) {
+          <div class="pending-entries">
+            @for (entry of liveStats()[i].pendingGoldEntries; track $index; let j = $index) {
+              <div class="pending-entry" [class.credit]="entry.amount > 0" [class.debit]="entry.amount < 0">
+                <span class="pending-amount">{{ entry.amount > 0 ? '+' : '' }}{{ entry.amount }}</span>
+                <span class="pending-comment">{{ entry.comment }}</span>
+                <button mat-icon-button class="pending-del" (click)="removePendingEntry(i, j)"
+                        matTooltip="Annuler">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Ajout rapide d'or -->
+        <div class="gold-add-row">
+          <mat-form-field appearance="outline" class="gold-input-amount">
+            <mat-label>Montant</mat-label>
+            <input matInput type="number" [(ngModel)]="newGoldInputs[i].amount"
+                   [name]="'goldAmt' + i" (keyup.enter)="addGoldEntry(i)" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="gold-input-comment">
+            <mat-label>Note</mat-label>
+            <input matInput [(ngModel)]="newGoldInputs[i].comment"
+                   [name]="'goldCmt' + i" placeholder="Trésor, achat…"
+                   (keyup.enter)="addGoldEntry(i)" />
+          </mat-form-field>
+          <button mat-icon-button color="primary" (click)="addGoldEntry(i)"
+                  [disabled]="newGoldInputs[i].amount === 0"
+                  matTooltip="Ajouter l'entrée d'or">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </div>
+
+      </mat-card>
+    }
+  </div>
+
+</div>

@@ -92,6 +92,15 @@
               <span class="gold-value">{{ hero()!.goldAmount }}</span>
               <span>pièces d'or</span>
             </div>
+              <div class="gold-journal">
+                @for (entry of hero()!.goldEntries; track $index) {
+                  <div class="journal-entry" [class.credit]="entry.amount > 0" [class.debit]="entry.amount < 0">
+                    <span class="journal-amount">{{ entry.amount > 0 ? '+' : '' }}{{ entry.amount }}</span>
+                    <span class="journal-comment">{{ entry.comment }}</span>
+                    <span class="journal-date">{{ entry.date | date:'dd/MM/yy' }}</span>
+                  </div>
+                }
+              </div>
           </mat-card-content>
         </mat-card>
 
@@ -233,12 +242,46 @@
                 </mat-form-field>
               </div>
 
-              <h3 class="edit-section-title">Or</h3>
-              <mat-form-field appearance="outline" class="gold-field">
-                <mat-label>Pièces d'or</mat-label>
-                <input matInput type="number" [(ngModel)]="editGoldAmount" name="editGold" min="0" />
-                <mat-icon matSuffix class="gold-icon">paid</mat-icon>
-              </mat-form-field>
+              <h3 class="edit-section-title">Or
+                <span class="gold-edit-total">
+                  <mat-icon class="gold-icon">paid</mat-icon>{{ editGoldTotal() }}
+                </span>
+              </h3>
+
+              <!-- Entrées existantes -->
+              @if (editGoldEntries.length > 0) {
+                <div class="gold-journal-edit">
+                  @for (entry of editGoldEntries; track $index; let i = $index) {
+                    <div class="journal-edit-row" [class.credit]="entry.amount > 0" [class.debit]="entry.amount < 0">
+                      <span class="journal-amount">{{ entry.amount > 0 ? '+' : '' }}{{ entry.amount }}</span>
+                      <span class="journal-comment">{{ entry.comment }}</span>
+                      <button mat-icon-button class="journal-delete-btn" (click)="removeGoldEntry(i)"
+                              matTooltip="Supprimer cette entrée">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </div>
+              }
+
+              <!-- Nouvelle entrée -->
+              <div class="gold-add-row">
+                <mat-form-field appearance="outline" class="gold-amount-field">
+                  <mat-label>Montant</mat-label>
+                  <input matInput type="number" [(ngModel)]="newEntryAmount" name="newAmount" />
+                  <mat-icon matSuffix class="gold-icon">paid</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="gold-comment-field">
+                  <mat-label>Commentaire</mat-label>
+                  <input matInput [(ngModel)]="newEntryComment" name="newComment"
+                         placeholder="Achat, récompense, pénalité…" />
+                  <mat-icon matSuffix>notes</mat-icon>
+                </mat-form-field>
+                <button mat-icon-button color="primary" (click)="addGoldEntry()"
+                        [disabled]="newEntryAmount === 0" matTooltip="Ajouter l'entrée">
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+              </div>
 
               <h3 class="edit-section-title">Quêtes terminées</h3>
               <div class="quest-checklist">
