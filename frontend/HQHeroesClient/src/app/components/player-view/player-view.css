@@ -11,10 +11,9 @@
   gap: 14px;
   margin-bottom: 36px;
   padding-bottom: 18px;
-  border-bottom: 2px solid var(--hq-border);
+  border-bottom: 1px solid var(--hq-border);
   flex-wrap: wrap;
   position: relative;
-  background: linear-gradient(180deg, rgba(139,26,26,0.25) 0%, transparent 100%);
 }
 
 .page-header::after {
@@ -53,16 +52,27 @@
   height: 1rem;
 }
 
-.page-header h1 {
-  margin: 0;
-  font-family: 'Cinzel', serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--hq-parchment);
+.spacer { flex: 1; }
+
+/* ── Indicateur de sync ──────────────────────────── */
+.sync-icon {
+  color: var(--hq-parchment-dim);
+  opacity: 0.4;
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
-.spacer { flex: 1; }
+.sync-icon.spinning {
+  animation: spin 1s linear infinite;
+  opacity: 1;
+  color: var(--hq-gold);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 
 /* ── Plateau ─────────────────────────────────────── */
 .board {
@@ -83,23 +93,9 @@
   .board-2, .board-3, .board-4 { grid-template-columns: 1fr; }
 }
 
-/* ── Indicateur de sauvegarde ───────────────────────── */
-.save-ok {
+/* ── Chargement ──────────────────────────────────── */
+.centered {
   display: flex;
-  align-items: center;
-  color: #81c784;
-  opacity: 0.6;
-  font-size: 1.1rem;
-}
-
-.save-error {
-  display: flex;
-  align-items: center;
-  color: #ef5350;
-  animation: blink 1.2s ease-in-out infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.3; }
+  justify-content: center;
+  padding: 80px 20px;
 }

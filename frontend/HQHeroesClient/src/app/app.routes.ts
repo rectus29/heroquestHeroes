@@ -4,6 +4,7 @@ import { HeroCreate } from './components/hero-create/hero-create';
 import { HeroDetail } from './components/hero-detail/hero-detail';
 import { GameSetup } from './components/game-setup/game-setup';
 import { GameBoard } from './components/game-board/game-board';
+import { PlayerView } from './components/player-view/player-view';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'heroes', pathMatch: 'full' },
@@ -11,5 +12,6 @@ export const routes: Routes = [
   { path: 'heroes/new', component: HeroCreate },
   { path: 'heroes/:id', component: HeroDetail },
   { path: 'game', component: GameSetup },
-  { path: 'game/board', component: GameBoard },
+  { path: 'game/board/:sessionId', component: GameBoard },
+  { path: 'game/view/:sessionId', component: PlayerView },
 ];

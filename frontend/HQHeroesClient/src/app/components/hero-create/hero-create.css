@@ -15,8 +15,9 @@
   gap: 14px;
   margin-bottom: 40px;
   padding-bottom: 18px;
-  border-bottom: 1px solid var(--hq-border);
+  border-bottom: 2px solid var(--hq-border);
   position: relative;
+  background: linear-gradient(180deg, rgba(139,26,26,0.25) 0%, transparent 100%);
 }
 
 .page-header::after {

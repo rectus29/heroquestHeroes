@@ -18,7 +18,7 @@ Permettre aux joueurs de suivre l'état de leur héros sur leur propre appareil 
 components/
 ├── hero-card/                   ← NOUVEAU composant partagé
 │   ├── hero-card.ts
-│   ├── hero-card.html
+│   ├── hero-card.htmlnpm run 
 │   └── hero-card.css
 │
 ├── game-board/                  ← MODIFIÉ — logique GM uniquement

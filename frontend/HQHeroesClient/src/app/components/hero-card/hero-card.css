@@ -1,0 +1,372 @@
+/* ── Carte héros ─────────────────────────────────── */
+.hero-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: opacity 0.3s;
+  position: relative;
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 18px; height: 18px;
+  border-top: 2px solid rgba(201, 168, 76, 0.35);
+  border-right: 2px solid rgba(201, 168, 76, 0.35);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-card::after {
+  content: '';
+  position: absolute;
+  bottom: 8px; left: 8px;
+  width: 18px; height: 18px;
+  border-bottom: 2px solid rgba(201, 168, 76, 0.35);
+  border-left: 2px solid rgba(201, 168, 76, 0.35);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-card.dead {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+
+.hero-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 16px 16px;
+  border-top: 3px solid;
+}
+
+.class-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 2px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.class-badge mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.hero-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--hq-parchment);
+  text-align: center;
+}
+
+.dead-label {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.8rem;
+  color: #e07070;
+}
+
+/* ── Ligne HP / SP ───────────────────────────────── */
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+}
+
+.stat-row .stat-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  flex-shrink: 0;
+}
+
+.stat-row .stat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--hq-parchment-dim);
+  width: 22px;
+}
+
+.adj-btn {
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+}
+
+.adj-btn mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.stat-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-nums {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.stat-value {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--hq-parchment);
+  min-width: 2ch;
+  text-align: center;
+}
+
+.stat-max {
+  font-family: 'IM Fell English', serif;
+  font-size: 0.85rem;
+  color: var(--hq-parchment-dim);
+  opacity: 0.6;
+}
+
+.stat-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.hp-fill { background: linear-gradient(90deg, #b71c1c, #ef5350); }
+.sp-fill { background: linear-gradient(90deg, #0d47a1, #42a5f5); }
+
+.stat-row.health .stat-icon { color: #ef5350; }
+.stat-row.spirit .stat-icon { color: #64b5f6; }
+
+/* ── ATK / DEF ───────────────────────────────────── */
+.combat-row {
+  display: flex;
+  justify-content: space-around;
+  padding: 14px 16px;
+}
+
+.combat-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.combat-stat mat-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.combat-stat span:nth-child(2) {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--hq-parchment);
+}
+
+.combat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--hq-parchment-dim);
+}
+
+.combat-stat.attack mat-icon  { color: var(--hq-ember); }
+.combat-stat.defence mat-icon { color: #81c784; }
+
+/* ── Or ──────────────────────────────────────────── */
+.gold-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px 16px;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.9rem;
+  color: var(--hq-parchment-dim);
+}
+
+.gold-icon { color: var(--hq-gold) !important; }
+
+.gold-value {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--hq-gold);
+}
+
+.gold-label { flex: 1; }
+
+.gold-reward {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--hq-gold);
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid var(--hq-gold-dim);
+  border-radius: 2px;
+  padding: 2px 6px;
+}
+
+/* ── Entrées en attente ──────────────────────────── */
+.pending-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 10px 6px;
+}
+
+.pending-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: 2px;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.78rem;
+  color: var(--hq-parchment-dim);
+  border-left: 2px solid var(--hq-border);
+}
+
+.pending-entry.credit { border-left-color: #81c784; }
+.pending-entry.debit  { border-left-color: #ef5350; }
+
+.pending-amount {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  min-width: 36px;
+}
+
+.pending-entry.credit .pending-amount { color: #81c784; }
+.pending-entry.debit  .pending-amount { color: #ef5350; }
+
+.pending-comment { flex: 1; font-style: italic; }
+
+.pending-del {
+  width: 22px !important;
+  height: 22px !important;
+  line-height: 22px !important;
+  opacity: 0.45;
+}
+
+.pending-del:hover { opacity: 1; }
+
+.pending-del mat-icon {
+  font-size: 0.75rem;
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+/* ── Saisie rapide d'or ──────────────────────────── */
+.gold-add-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px 10px 10px;
+}
+
+.gold-input-amount  { width: 90px; flex-shrink: 0; }
+.gold-input-comment { flex: 1; min-width: 0; }
+
+.gold-add-row mat-form-field { font-size: 0.82rem; }
+
+/* ── Équipements trouvés ────────────────────────────── */
+.equip-section {
+  padding: 10px 10px 12px;
+}
+
+.equip-header-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.equip-section-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  color: var(--hq-gold);
+}
+
+.equip-section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--hq-parchment-dim);
+}
+
+.equip-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.equip-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 4px 2px 8px;
+  border-radius: 2px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid var(--hq-border);
+  font-family: 'IM Fell English', serif;
+  font-size: 0.78rem;
+  color: var(--hq-parchment);
+}
+
+.equip-del {
+  width: 20px !important;
+  height: 20px !important;
+  line-height: 20px !important;
+  opacity: 0.45;
+}
+
+.equip-del:hover { opacity: 1; }
+
+.equip-del mat-icon {
+  font-size: 0.7rem;
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.equip-add-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.equip-select { flex: 1; font-size: 0.82rem; }

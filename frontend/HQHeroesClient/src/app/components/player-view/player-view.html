@@ -1,0 +1,48 @@
+<div class="page-container">
+
+  <div class="page-header">
+    <mat-icon class="title-icon">visibility</mat-icon>
+    @if (session()) {
+      <div class="quest-badge">
+        <mat-icon>sports_esports</mat-icon>
+        {{ session()!.displayName }}
+      </div>
+    }
+    @if (quest()) {
+      <div class="quest-badge">
+        <mat-icon>menu_book</mat-icon>
+        Q{{ quest()!.number }} — {{ quest()!.title }}
+      </div>
+    }
+    <span class="spacer"></span>
+    <mat-icon class="sync-icon" [class.spinning]="syncing()"
+              matTooltip="Synchronisation automatique toutes les 5s">sync</mat-icon>
+    <button mat-stroked-button (click)="copyLink()">
+      <mat-icon>{{ copied() ? 'check' : 'share' }}</mat-icon>
+      {{ copied() ? 'Lien copié !' : 'Copier le lien' }}
+    </button>
+  </div>
+
+  @if (heroes().length === 0) {
+    <div class="centered">
+      <mat-spinner diameter="60"></mat-spinner>
+    </div>
+  } @else {
+    <div class="board" [class.board-1]="heroes().length === 1"
+                       [class.board-2]="heroes().length === 2"
+                       [class.board-3]="heroes().length === 3"
+                       [class.board-4]="heroes().length === 4">
+      @for (hero of heroes(); track hero.id; let i = $index) {
+        @if (liveStats()[i]) {
+          <app-hero-card
+            [hero]="hero"
+            [liveState]="liveStats()[i]"
+            [readonly]="true"
+            [quest]="quest()"
+          />
+        }
+      }
+    </div>
+  }
+
+</div>

@@ -1,5 +1,25 @@
 import { HeroClass } from './hero-class.enum';
 
+export interface HeroSessionStateDTO {
+  heroId: string;
+  currentHp: number;
+  currentSp: number;
+  pendingGoldEntries: GoldEntryDTO[];
+  pendingEquipements: string[];
+}
+
+export interface GameSessionDTO {
+  id: string;
+  name: string | null;
+  displayName: string;
+  questId: string | null;
+  heroIds: string[];
+  heroStates: HeroSessionStateDTO[];
+  status: 'IN_PROGRESS' | 'ENDED' | 'ABANDONED';
+  creationInstant: string;
+  updateInstant: string | null;
+}
+
 export interface StuffAttributeDTO {
   dogme: 'HEALTH' | 'SPIRIT' | 'ATTACK' | 'DEFENCE';
   value: number;

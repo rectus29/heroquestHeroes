@@ -2,12 +2,20 @@
   <div class="page-header">
     <div class="header-title">
       <mat-icon class="title-icon">shield</mat-icon>
-      <h1>Héros de HeroQuest</h1>
+      <h1>HeroQuest Heroes</h1>
     </div>
-    <a mat-stroked-button routerLink="/game" matTooltip="Lancer une partie">
-      <mat-icon>casino</mat-icon>
-      Commencer une partie
-    </a>
+    @if (activeSessionCount() > 0) {
+      <a mat-stroked-button routerLink="/game" class="active-session-btn"
+         matTooltip="Reprendre une partie en cours">
+        <mat-icon>sports_esports</mat-icon>
+        {{ activeSessionCount() }} partie{{ activeSessionCount() > 1 ? 's' : '' }} en cours
+      </a>
+    } @else {
+      <a mat-stroked-button routerLink="/game" matTooltip="Lancer une partie">
+        <mat-icon>casino</mat-icon>
+        Commencer une partie
+      </a>
+    }
     <a mat-fab routerLink="/heroes/new" matTooltip="Créer un héros" aria-label="Créer un héros">
       <mat-icon>add</mat-icon>
     </a>

@@ -20,10 +20,27 @@ public class Stuff {
     @NotNull
     private Equipment equipment;
 
-
     private List<StuffAttribute> attributesList = new ArrayList<>();
 
+    public static Stuff from(Equipment equipment) {
+        List<StuffAttribute> attrs = new ArrayList<>();
+        if (equipment.getAttackMod() != 0) {
+            attrs.add(new StuffAttribute().setDogma(StuffAttributeDogma.ATTACK).setValue(equipment.getAttackMod()));
+        }
+        if (equipment.getDefenceMod() != 0) {
+            attrs.add(new StuffAttribute().setDogma(StuffAttributeDogma.DEFENCE).setValue(equipment.getDefenceMod()));
+        }
+        if (equipment.getHealthMod() != 0) {
+            attrs.add(new StuffAttribute().setDogma(StuffAttributeDogma.HEALTH).setValue(equipment.getHealthMod()));
+        }
+        if (equipment.getSpiritMod() != 0) {
+            attrs.add(new StuffAttribute().setDogma(StuffAttributeDogma.SPIRIT).setValue(equipment.getSpiritMod()));
+        }
+        return new Stuff().setEquipment(equipment).setAttributesList(attrs);
+    }
+
     @Data
+    @Accessors(chain = true)
     public static class StuffAttribute {
         private StuffAttributeDogma dogma;
         private int value = 0;
