@@ -71,6 +71,7 @@ public class HeroDTO {
     @Data
     @Accessors(chain = true)
     public static class StuffDTO {
+        private String id;
         private String name;
         private String desc;
         private List<StuffAttributeDTO> attributes = new ArrayList<>();
@@ -83,6 +84,7 @@ public class HeroDTO {
 
         public static StuffDTO from(Stuff stuff) {
             return new StuffDTO()
+                    .setId(stuff.getEquipment().name())
                     .setName(stuff.getEquipment().getLabel())
                     .setDesc(stuff.getEquipment().getDescription())
                     .setAttributes(stuff.getAttributesList().stream().map(attrib -> new StuffAttributeDTO().setDogme(attrib.getDogma().name()).setValue(attrib.getValue())).toList());

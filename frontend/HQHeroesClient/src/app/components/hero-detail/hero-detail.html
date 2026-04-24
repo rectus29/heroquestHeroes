@@ -305,6 +305,70 @@
                 <mat-icon matSuffix>notes</mat-icon>
               </mat-form-field>
 
+              <h3 class="edit-section-title">Équipement</h3>
+
+              @if (editEquipements.length > 0) {
+                <div class="equip-edit-list">
+                  @for (eqId of editEquipements; track $index; let i = $index) {
+                    @let eq = allEquipments().find(e => e.id === eqId);
+                    <div class="equip-edit-row">
+                      <div class="equip-edit-info">
+                        <span class="equip-edit-name">{{ eq?.label ?? eqId }}</span>
+                        @if (eq) {
+                          <div class="equip-edit-attrs">
+                            @if (eq.attackMod  !== 0) {
+                              <span class="attr-chip attack">
+                                <mat-icon>gavel</mat-icon>ATK {{ eq.attackMod > 0 ? '+' : '' }}{{ eq.attackMod }}
+                              </span>
+                            }
+                            @if (eq.defenceMod !== 0) {
+                              <span class="attr-chip defence">
+                                <mat-icon>security</mat-icon>DEF {{ eq.defenceMod > 0 ? '+' : '' }}{{ eq.defenceMod }}
+                              </span>
+                            }
+                            @if (eq.healthMod  !== 0) {
+                              <span class="attr-chip health">
+                                <mat-icon>favorite</mat-icon>PV {{ eq.healthMod > 0 ? '+' : '' }}{{ eq.healthMod }}
+                              </span>
+                            }
+                            @if (eq.spiritMod  !== 0) {
+                              <span class="attr-chip spirit">
+                                <mat-icon>auto_awesome</mat-icon>PE {{ eq.spiritMod > 0 ? '+' : '' }}{{ eq.spiritMod }}
+                              </span>
+                            }
+                          </div>
+                        }
+                      </div>
+                      <button mat-icon-button class="equip-delete-btn" (click)="removeEquipement(i)"
+                              matTooltip="Retirer">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </div>
+              }
+
+              <div class="equip-add-row">
+                <mat-form-field appearance="outline" class="equip-select-field">
+                  <mat-label>Équipement à ajouter</mat-label>
+                  <mat-select [(ngModel)]="selectedEquipmentId" name="equipSelect">
+                    <mat-option value="">— Choisir —</mat-option>
+                    @for (eq of allEquipments(); track eq.id) {
+                      <mat-option [value]="eq.id">
+                        {{ eq.label }}
+                        @if (eq.goldCost > 0) {
+                          <span class="equip-option-cost"> — {{ eq.goldCost }} or</span>
+                        }
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <button mat-icon-button color="primary" (click)="addEquipement()"
+                        [disabled]="!selectedEquipmentId" matTooltip="Ajouter l'équipement">
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+              </div>
+
             </div>
           </mat-card-content>
           <mat-card-actions align="end">

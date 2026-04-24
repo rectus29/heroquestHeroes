@@ -56,7 +56,8 @@ public class HeroController {
                 .setDefencePoints(request.getDefencePoints())
                 .setGoldEntries(request.getGoldEntries())
                 .setComment(request.getComment())
-                .setCompletedQuests(request.getCompletedQuests());
+                .setCompletedQuests(request.getCompletedQuests())
+                .setEquipements(request.getEquipements());
         return HeroDTO.from(heroService.save(hero));
     }
 

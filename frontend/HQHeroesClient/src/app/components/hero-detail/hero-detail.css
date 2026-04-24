@@ -556,6 +556,76 @@ mat-card-title mat-icon {
   margin-left: 4px;
 }
 
+/* ── Équipement (édition) ────────────────────────── */
+.equip-edit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.equip-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 3px solid var(--hq-gold-dim);
+}
+
+.equip-edit-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.equip-edit-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--hq-parchment);
+}
+
+.equip-edit-attrs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.equip-delete-btn {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.equip-delete-btn:hover { opacity: 1; }
+
+.equip-delete-btn mat-icon {
+  font-size: 0.9rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  color: #ef5350;
+}
+
+.equip-add-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.equip-select-field {
+  flex: 1;
+}
+
+.equip-option-cost {
+  font-size: 0.8em;
+  opacity: 0.6;
+}
+
 /* ── Mode édition ────────────────────────────────── */
 .edit-layout { width: 100%; }
 

@@ -73,12 +73,18 @@
   <div class="combat-row">
     <div class="combat-stat attack">
       <mat-icon>gavel</mat-icon>
-      <span>{{ hero().resolvedAttackPoints }}</span>
+      <div class="combat-values">
+        <span class="combat-resolved">{{ hero().resolvedAttackPoints }}</span>
+        <span class="combat-base"><span class="combat-base-label">base</span>{{ hero().attackPoints }}</span>
+      </div>
       <span class="combat-label">ATK</span>
     </div>
     <div class="combat-stat defence">
       <mat-icon>security</mat-icon>
-      <span>{{ hero().resolvedDefencePoints }}</span>
+      <div class="combat-values">
+        <span class="combat-resolved">{{ hero().resolvedDefencePoints }}</span>
+        <span class="combat-base"><span class="combat-base-label">base</span>{{ hero().defencePoints }}</span>
+      </div>
       <span class="combat-label">DEF</span>
     </div>
   </div>

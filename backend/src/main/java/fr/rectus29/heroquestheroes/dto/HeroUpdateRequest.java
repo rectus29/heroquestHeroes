@@ -2,6 +2,7 @@ package fr.rectus29.heroquestheroes.dto;
 
 import fr.rectus29.heroquestheroes.enums.Quest;
 import fr.rectus29.heroquestheroes.model.GoldEntry;
+import fr.rectus29.heroquestheroes.model.Stuff;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -17,4 +18,5 @@ public class HeroUpdateRequest {
     private List<GoldEntry> goldEntries = new ArrayList<>();
     private String comment;
     private List<Quest> completedQuests = new ArrayList<>();
+    private List<Stuff> equipements = new ArrayList<>();
 }

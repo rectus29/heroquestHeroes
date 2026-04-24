@@ -9,10 +9,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HeroService } from '../../services/hero.service';
 import { QuestBookService } from '../../services/quest-book.service';
-import { GoldEntryDTO, HeroDTO, HeroUpdateRequest } from '../../models/hero.model';
+import { EquipmentService } from '../../services/equipment.service';
+import { EquipmentCatalogDTO, GoldEntryDTO, HeroDTO, HeroUpdateRequest, StuffRequest } from '../../models/hero.model';
 import { HERO_CLASS_INFO, HeroClass } from '../../models/hero-class.enum';
 import { QuestBookEntry } from '../../models/base-quest-book';
 
@@ -29,15 +31,17 @@ import { QuestBookEntry } from '../../models/base-quest-book';
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     MatTooltipModule,
   ],
   templateUrl: './hero-detail.html',
   styleUrl: './hero-detail.css',
 })
 export class HeroDetail implements OnInit {
-  private readonly heroService = inject(HeroService);
+  private readonly heroService      = inject(HeroService);
   private readonly questBookService = inject(QuestBookService);
-  private readonly route = inject(ActivatedRoute);
+  private readonly equipmentService = inject(EquipmentService);
+  private readonly route  = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   hero = signal<HeroDTO | null>(null);
@@ -46,7 +50,8 @@ export class HeroDetail implements OnInit {
   editMode = signal(false);
   saving = signal(false);
 
-  allQuests = signal<QuestBookEntry[]>([]);
+  allQuests      = signal<QuestBookEntry[]>([]);
+  allEquipments  = signal<EquipmentCatalogDTO[]>([]);
 
   // Champs du formulaire d'édition
   editName = '';
@@ -58,6 +63,9 @@ export class HeroDetail implements OnInit {
   editComment = '';
   editCompletedQuests: string[] = [];
 
+  editEquipements: string[] = [];
+  selectedEquipmentId = '';
+
   // Formulaire d'ajout d'une entrée d'or
   newEntryAmount = 0;
   newEntryComment = '';
@@ -67,6 +75,10 @@ export class HeroDetail implements OnInit {
 
     this.questBookService.getAll().subscribe({
       next: (quests) => this.allQuests.set(quests),
+    });
+
+    this.equipmentService.getAll().subscribe({
+      next: (equipments) => this.allEquipments.set(equipments),
     });
 
     this.heroService.getById(id).subscribe({
@@ -126,6 +138,32 @@ export class HeroDetail implements OnInit {
     this.editGoldEntries = this.editGoldEntries.filter((_, i) => i !== index);
   }
 
+  // ── Édition équipement ──────────────────────────────────────────────────
+
+  addEquipement(): void {
+    if (!this.selectedEquipmentId) return;
+    this.editEquipements = [...this.editEquipements, this.selectedEquipmentId];
+    this.selectedEquipmentId = '';
+  }
+
+  removeEquipement(index: number): void {
+    this.editEquipements = this.editEquipements.filter((_, i) => i !== index);
+  }
+
+  private buildStuffRequests(): StuffRequest[] {
+    return this.editEquipements.map(id => {
+      const eq = this.allEquipments().find(e => e.id === id);
+      const attributesList: StuffRequest['attributesList'] = [];
+      if (eq) {
+        if (eq.attackMod  !== 0) attributesList.push({ dogma: 'ATTACK',  value: eq.attackMod  });
+        if (eq.defenceMod !== 0) attributesList.push({ dogma: 'DEFENCE', value: eq.defenceMod });
+        if (eq.healthMod  !== 0) attributesList.push({ dogma: 'HEALTH',  value: eq.healthMod  });
+        if (eq.spiritMod  !== 0) attributesList.push({ dogma: 'SPIRIT',  value: eq.spiritMod  });
+      }
+      return { equipment: id, attributesList };
+    });
+  }
+
   // ── Mode édition ─────────────────────────────────────────────────────────
 
   startEdit(): void {
@@ -138,6 +176,8 @@ export class HeroDetail implements OnInit {
     this.editGoldEntries = [...(hero.goldEntries ?? [])];
     this.editComment = hero.comment ?? '';
     this.editCompletedQuests = [...(hero.completedQuests ?? [])];
+    this.editEquipements = hero.equipements.map(e => e.id);
+    this.selectedEquipmentId = '';
     this.newEntryAmount = 0;
     this.newEntryComment = '';
     this.editMode.set(true);
@@ -160,7 +200,7 @@ export class HeroDetail implements OnInit {
       goldEntries: this.editGoldEntries,
       comment: this.editComment || null,
       completedQuests: this.editCompletedQuests,
-      equipements: hero.equipements,
+      equipements: this.buildStuffRequests(),
     };
     this.heroService.update(hero.id, request).subscribe({
       next: (updated) => {

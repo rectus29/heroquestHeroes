@@ -187,11 +187,39 @@
   height: 1.2rem;
 }
 
-.combat-stat span:nth-child(2) {
+.combat-values {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.combat-resolved {
   font-family: 'Cinzel', serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--hq-parchment);
+  line-height: 1;
+}
+
+.combat-base {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--hq-parchment-dim);
+  opacity: 0.55;
+  border-top: 1px solid rgba(232, 213, 160, 0.12);
+  padding-top: 2px;
+}
+
+.combat-base-label {
+  font-size: 0.52rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.7;
 }
 
 .combat-label {

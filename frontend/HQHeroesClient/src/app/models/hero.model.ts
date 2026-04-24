@@ -1,5 +1,18 @@
 import { HeroClass } from './hero-class.enum';
 
+export interface EquipmentCatalogDTO {
+  id: string;
+  label: string;
+  description: string;
+  category: 'ARME' | 'ARMURE' | 'POTION' | 'SORT' | 'AMULETTE';
+  source: 'ARMURERIE' | 'RECOMPENSE_QUETE';
+  goldCost: number;
+  attackMod: number;
+  defenceMod: number;
+  healthMod: number;
+  spiritMod: number;
+}
+
 export interface HeroSessionStateDTO {
   heroId: string;
   currentHp: number;
@@ -25,7 +38,13 @@ export interface StuffAttributeDTO {
   value: number;
 }
 
+export interface StuffRequest {
+  equipment: string;
+  attributesList: { dogma: 'HEALTH' | 'SPIRIT' | 'ATTACK' | 'DEFENCE'; value: number }[];
+}
+
 export interface StuffDTO {
+  id: string;
   name: string;
   desc: string;
   attributes: StuffAttributeDTO[];
@@ -76,5 +95,5 @@ export interface HeroUpdateRequest {
   goldEntries: GoldEntryDTO[];
   comment: string | null;
   completedQuests: string[];
-  equipements: StuffDTO[];
+  equipements: StuffRequest[];
 }
