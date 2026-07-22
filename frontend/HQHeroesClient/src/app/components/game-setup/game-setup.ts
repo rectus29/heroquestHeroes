@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
@@ -32,23 +32,24 @@ import { QuestBookEntry } from '../../models/base-quest-book';
     MatTooltipModule,
   ],
   templateUrl: './game-setup.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './game-setup.css',
 })
 export class GameSetup implements OnInit {
-  private readonly heroService        = inject(HeroService);
-  private readonly questBookService   = inject(QuestBookService);
+  private readonly heroService = inject(HeroService);
+  private readonly questBookService = inject(QuestBookService);
   private readonly gameSessionService = inject(GameSessionService);
-  private readonly router             = inject(Router);
+  private readonly router = inject(Router);
 
-  allHeroes      = signal<HeroDTO[]>([]);
-  allQuests      = signal<QuestBookEntry[]>([]);
+  allHeroes = signal<HeroDTO[]>([]);
+  allQuests = signal<QuestBookEntry[]>([]);
   activeSessions = signal<GameSessionDTO[]>([]);
-  loading        = signal(true);
+  loading = signal(true);
 
-  selectedHeroes  = signal<HeroDTO[]>([]);
+  selectedHeroes = signal<HeroDTO[]>([]);
   selectedQuestId = '';
-  sessionName     = '';
-  linkCopied      = signal(false);
+  sessionName = '';
+  linkCopied = signal(false);
 
   get playerLink(): string | null {
     const id = this.gameSessionService.lastCreatedSessionId();
@@ -57,8 +58,8 @@ export class GameSetup implements OnInit {
 
   ngOnInit(): void {
     forkJoin({
-      heroes:   this.heroService.getAll(),
-      quests:   this.questBookService.getAll(),
+      heroes: this.heroService.getAll(),
+      quests: this.questBookService.getAll(),
       sessions: this.gameSessionService.listActive(),
     }).subscribe({
       next: ({ heroes, quests, sessions }) => {
@@ -76,27 +77,27 @@ export class GameSetup implements OnInit {
   }
 
   isSelected(heroId: string): boolean {
-    return this.selectedHeroes().some(h => h.id === heroId);
+    return this.selectedHeroes().some((h) => h.id === heroId);
   }
 
   toggleHero(hero: HeroDTO): void {
     if (this.isSelected(hero.id)) {
-      this.selectedHeroes.update(list => list.filter(h => h.id !== hero.id));
+      this.selectedHeroes.update((list) => list.filter((h) => h.id !== hero.id));
     } else if (this.selectedHeroes().length < 4) {
-      this.selectedHeroes.update(list => [...list, hero]);
+      this.selectedHeroes.update((list) => [...list, hero]);
     }
   }
 
   resume(session: GameSessionDTO): void {
-    const heroes = this.allHeroes().filter(h => session.heroIds.includes(h.id));
-    const quest  = this.allQuests().find(q => q.id === session.questId) ?? null;
+    const heroes = this.allHeroes().filter((h) => session.heroIds.includes(h.id));
+    const quest = this.allQuests().find((q) => q.id === session.questId) ?? null;
     this.gameSessionService.session.set(session);
     this.gameSessionService.setHeroes(heroes, quest);
     this.router.navigate(['/game/board', session.id]);
   }
 
   start(): void {
-    const quest = this.allQuests().find(q => q.id === this.selectedQuestId) ?? null;
+    const quest = this.allQuests().find((q) => q.id === this.selectedQuestId) ?? null;
     this.gameSessionService.create(this.selectedHeroes(), quest, this.sessionName);
   }
 
@@ -109,8 +110,8 @@ export class GameSetup implements OnInit {
 
   getSessionHeroNames(session: GameSessionDTO): string {
     return this.allHeroes()
-      .filter(h => session.heroIds.includes(h.id))
-      .map(h => h.name)
+      .filter((h) => session.heroIds.includes(h.id))
+      .map((h) => h.name)
       .join(', ');
   }
 }

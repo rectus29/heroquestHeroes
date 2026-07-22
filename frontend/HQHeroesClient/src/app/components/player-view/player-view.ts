@@ -1,4 +1,11 @@
-import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,28 +18,23 @@ import { HeroCard, LiveStat } from '../hero-card/hero-card';
 
 @Component({
   selector: 'app-player-view',
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule,
-    HeroCard,
-  ],
+  imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule, HeroCard],
   templateUrl: './player-view.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './player-view.css',
 })
 export class PlayerView implements OnInit, OnDestroy {
   private readonly gameSessionService = inject(GameSessionService);
-  private readonly heroService        = inject(HeroService);
-  private readonly route              = inject(ActivatedRoute);
-  private readonly router             = inject(Router);
+  private readonly heroService = inject(HeroService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
-  session   = signal<GameSessionDTO | null>(null);
-  heroes    = signal<HeroDTO[]>([]);
-  quest     = this.gameSessionService.quest;
+  session = signal<GameSessionDTO | null>(null);
+  heroes = signal<HeroDTO[]>([]);
+  quest = this.gameSessionService.quest;
   liveStats = signal<LiveStat[]>([]);
-  syncing   = signal(false);
-  copied    = signal(false);
+  syncing = signal(false);
+  copied = signal(false);
 
   private pollIntervalId: ReturnType<typeof setInterval> | null = null;
 
@@ -42,16 +44,20 @@ export class PlayerView implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const sessionId = this.sessionId;
-    if (!sessionId) { this.router.navigate(['/game']); return; }
+    if (!sessionId) {
+      this.router.navigate(['/game']);
+      return;
+    }
 
     this.gameSessionService.refresh(sessionId).subscribe({
       next: (session) => {
         if (session.status !== 'IN_PROGRESS') {
-          this.router.navigate(['/game']); return;
+          this.router.navigate(['/game']);
+          return;
         }
         this.session.set(session);
-        this.heroService.getAll().subscribe(allHeroes => {
-          const sessionHeroes = allHeroes.filter(h => session.heroIds.includes(h.id));
+        this.heroService.getAll().subscribe((allHeroes) => {
+          const sessionHeroes = allHeroes.filter((h) => session.heroIds.includes(h.id));
           this.heroes.set(sessionHeroes);
           this.initLiveStats(sessionHeroes, session);
         });
@@ -82,32 +88,32 @@ export class PlayerView implements OnInit, OnDestroy {
 
   private initLiveStats(heroes: HeroDTO[], session: GameSessionDTO): void {
     this.liveStats.set(
-      heroes.map(hero => {
-        const state = session.heroStates.find(s => s.heroId === hero.id);
+      heroes.map((hero) => {
+        const state = session.heroStates.find((s) => s.heroId === hero.id);
         return {
           hp: state?.currentHp ?? hero.healthPoints,
           sp: state?.currentSp ?? hero.spiritPoints,
           pendingGoldEntries: state?.pendingGoldEntries ?? [],
           pendingEquipements: state?.pendingEquipements ?? [],
         };
-      })
+      }),
     );
   }
 
   private applyServerState(session: GameSessionDTO): void {
-    this.liveStats.update(stats =>
+    this.liveStats.update((stats) =>
       stats.map((stat, i) => {
         const hero = this.heroes()[i];
         if (!hero) return stat;
-        const serverState = session.heroStates.find(s => s.heroId === hero.id);
+        const serverState = session.heroStates.find((s) => s.heroId === hero.id);
         if (!serverState) return stat;
         return {
-          hp:                 serverState.currentHp,
-          sp:                 serverState.currentSp,
+          hp: serverState.currentHp,
+          sp: serverState.currentSp,
           pendingGoldEntries: serverState.pendingGoldEntries,
           pendingEquipements: serverState.pendingEquipements,
         };
-      })
+      }),
     );
   }
 

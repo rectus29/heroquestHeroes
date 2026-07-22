@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,25 +24,26 @@ import { QuestBookEntry } from '../../models/base-quest-book';
     MatTooltipModule,
   ],
   templateUrl: './hero-list.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hero-list.css',
 })
 export class HeroList implements OnInit {
-  private readonly heroService        = inject(HeroService);
+  private readonly heroService = inject(HeroService);
   private readonly gameSessionService = inject(GameSessionService);
-  private readonly questBookService   = inject(QuestBookService);
-  private readonly router             = inject(Router);
+  private readonly questBookService = inject(QuestBookService);
+  private readonly router = inject(Router);
 
-  heroes          = signal<HeroDTO[]>([]);
-  activeSessions  = signal<GameSessionDTO[]>([]);
-  allQuests       = signal<QuestBookEntry[]>([]);
-  loading         = signal(true);
-  error           = signal<string | null>(null);
+  heroes = signal<HeroDTO[]>([]);
+  activeSessions = signal<GameSessionDTO[]>([]);
+  allQuests = signal<QuestBookEntry[]>([]);
+  loading = signal(true);
+  error = signal<string | null>(null);
 
   ngOnInit(): void {
     forkJoin({
-      heroes:   this.heroService.getAll(),
+      heroes: this.heroService.getAll(),
       sessions: this.gameSessionService.listActive(),
-      quests:   this.questBookService.getAll(),
+      quests: this.questBookService.getAll(),
     }).subscribe({
       next: ({ heroes, sessions, quests }) => {
         this.heroes.set(heroes);
@@ -63,14 +64,14 @@ export class HeroList implements OnInit {
 
   getSessionHeroNames(session: GameSessionDTO): string {
     return this.heroes()
-      .filter(h => session.heroIds.includes(h.id))
-      .map(h => h.name)
+      .filter((h) => session.heroIds.includes(h.id))
+      .map((h) => h.name)
       .join(', ');
   }
 
   resume(session: GameSessionDTO): void {
-    const heroes = this.heroes().filter(h => session.heroIds.includes(h.id));
-    const quest  = this.allQuests().find(q => q.id === session.questId) ?? null;
+    const heroes = this.heroes().filter((h) => session.heroIds.includes(h.id));
+    const quest = this.allQuests().find((q) => q.id === session.questId) ?? null;
     this.gameSessionService.session.set(session);
     this.gameSessionService.setHeroes(heroes, quest);
     this.router.navigate(['/game/board', session.id]);
