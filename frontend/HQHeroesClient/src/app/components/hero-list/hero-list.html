@@ -4,18 +4,10 @@
       <mat-icon class="title-icon">shield</mat-icon>
       <h1>HeroQuest Heroes</h1>
     </div>
-    @if (activeSessionCount() > 0) {
-      <a mat-stroked-button routerLink="/game" class="active-session-btn"
-         matTooltip="Reprendre une partie en cours">
-        <mat-icon>sports_esports</mat-icon>
-        {{ activeSessionCount() }} partie{{ activeSessionCount() > 1 ? 's' : '' }} en cours
-      </a>
-    } @else {
-      <a mat-stroked-button routerLink="/game" matTooltip="Lancer une partie">
-        <mat-icon>casino</mat-icon>
-        Commencer une partie
-      </a>
-    }
+    <a mat-stroked-button routerLink="/game" matTooltip="Préparer une nouvelle partie">
+      <mat-icon>casino</mat-icon>
+      Nouvelle partie
+    </a>
     <a mat-fab routerLink="/heroes/new" matTooltip="Créer un héros" aria-label="Créer un héros">
       <mat-icon>add</mat-icon>
     </a>
@@ -35,16 +27,43 @@
         Réessayer
       </button>
     </div>
-  } @else if (heroes().length === 0) {
-    <div class="centered empty-state">
-      <mat-icon class="big-icon">person_search</mat-icon>
-      <p>Aucun héros pour l'instant.</p>
-      <a mat-flat-button routerLink="/heroes/new">
-        <mat-icon>add</mat-icon>
-        Créer le premier héros
-      </a>
-    </div>
   } @else {
+
+    @if (activeSessions().length > 0) {
+      <div class="sessions-section">
+        <div class="sessions-section-title">
+          <mat-icon>sports_esports</mat-icon>
+          Parties en cours
+          <span class="sessions-count">{{ activeSessions().length }}</span>
+        </div>
+        <div class="sessions-list">
+          @for (session of activeSessions(); track session.id) {
+            <div class="session-row">
+              <mat-icon class="session-icon">casino</mat-icon>
+              <div class="session-info">
+                <span class="session-name">{{ session.displayName }}</span>
+                <span class="session-heroes">{{ getSessionHeroNames(session) }}</span>
+              </div>
+              <button mat-stroked-button (click)="resume(session)">
+                <mat-icon>play_circle</mat-icon>
+                Reprendre
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (heroes().length === 0) {
+      <div class="centered empty-state">
+        <mat-icon class="big-icon">person_search</mat-icon>
+        <p>Aucun héros pour l'instant.</p>
+        <a mat-flat-button routerLink="/heroes/new">
+          <mat-icon>add</mat-icon>
+          Créer le premier héros
+        </a>
+      </div>
+    } @else {
     <div class="heroes-grid">
       @for (hero of heroes(); track hero.id) {
         <mat-card class="hero-card" [routerLink]="['/heroes', hero.id]">
@@ -100,5 +119,7 @@
         </mat-card>
       }
     </div>
+    }
+
   }
 </div>

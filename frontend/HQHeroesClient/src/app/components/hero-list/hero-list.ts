@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,8 +8,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { forkJoin } from 'rxjs';
 import { HeroService } from '../../services/hero.service';
 import { GameSessionService } from '../../services/game-session.service';
-import { HeroDTO } from '../../models/hero.model';
+import { QuestBookService } from '../../services/quest-book.service';
+import { GameSessionDTO, HeroDTO } from '../../models/hero.model';
 import { HERO_CLASS_INFO, HeroClass } from '../../models/hero-class.enum';
+import { QuestBookEntry } from '../../models/base-quest-book';
 
 @Component({
   selector: 'app-hero-list',
@@ -27,20 +29,25 @@ import { HERO_CLASS_INFO, HeroClass } from '../../models/hero-class.enum';
 export class HeroList implements OnInit {
   private readonly heroService        = inject(HeroService);
   private readonly gameSessionService = inject(GameSessionService);
+  private readonly questBookService   = inject(QuestBookService);
+  private readonly router             = inject(Router);
 
-  heroes         = signal<HeroDTO[]>([]);
-  loading        = signal(true);
-  error          = signal<string | null>(null);
-  activeSessionCount = signal(0);
+  heroes          = signal<HeroDTO[]>([]);
+  activeSessions  = signal<GameSessionDTO[]>([]);
+  allQuests       = signal<QuestBookEntry[]>([]);
+  loading         = signal(true);
+  error           = signal<string | null>(null);
 
   ngOnInit(): void {
     forkJoin({
       heroes:   this.heroService.getAll(),
       sessions: this.gameSessionService.listActive(),
+      quests:   this.questBookService.getAll(),
     }).subscribe({
-      next: ({ heroes, sessions }) => {
+      next: ({ heroes, sessions, quests }) => {
         this.heroes.set(heroes);
-        this.activeSessionCount.set(sessions.length);
+        this.activeSessions.set(sessions);
+        this.allQuests.set(quests);
         this.loading.set(false);
       },
       error: () => {
@@ -52,5 +59,20 @@ export class HeroList implements OnInit {
 
   getClassInfo(heroClass: HeroClass) {
     return HERO_CLASS_INFO[heroClass];
+  }
+
+  getSessionHeroNames(session: GameSessionDTO): string {
+    return this.heroes()
+      .filter(h => session.heroIds.includes(h.id))
+      .map(h => h.name)
+      .join(', ');
+  }
+
+  resume(session: GameSessionDTO): void {
+    const heroes = this.heroes().filter(h => session.heroIds.includes(h.id));
+    const quest  = this.allQuests().find(q => q.id === session.questId) ?? null;
+    this.gameSessionService.session.set(session);
+    this.gameSessionService.setHeroes(heroes, quest);
+    this.router.navigate(['/game/board', session.id]);
   }
 }

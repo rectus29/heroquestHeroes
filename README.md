@@ -7,11 +7,22 @@ Gardez une trace de vos aventuriers entre les quêtes : statistiques, équipemen
 
 ## Fonctionnalités
 
+### Gestion des héros
+
 - **Créer** un héros en choisissant sa classe (Barbare, Elfe, Nain, Enchanteur)
 - **Consulter** sa fiche : points de vie, points d'esprit, attaque, défense, or, équipement et quêtes accomplies
 - **Modifier** ses statistiques, ses notes et les quêtes terminées via un formulaire d'édition
 - **Supprimer** un héros en fin de campagne
 - Calcul automatique des points d'attaque et de défense **résolus** en tenant compte des bonus d'équipement
+
+### Parties de jeu
+
+- **Lancer une partie** : choisir les héros participants et une quête (ou partie libre)
+- **Plateau de suivi en direct** : points de vie / d'esprit, or ramassé et équipements trouvés pendant la quête, avec **auto-sauvegarde** continue côté serveur
+- **Reprendre une partie** depuis n'importe quel appareil ou onglet — les parties en cours sont listées sur la page d'accueil
+- **Fin de quête** : l'or, les équipements ramassés et la quête accomplie sont automatiquement engagés sur chaque héros ; possibilité d'**abandonner** une partie sans impact
+- **Vue joueur** en lecture seule via un lien partageable, rafraîchie automatiquement (polling) — chaque joueur suit l'état de son héros sur son propre écran
+- **Catalogue d'équipement** (armes, armures, potions, sorts, amulettes) exposé par l'API et filtrable par catégorie / source
 
 ---
 
@@ -24,7 +35,9 @@ Gardez une trace de vos aventuriers entre les quêtes : statistiques, équipemen
 | Migrations BDD | Mongock 5.4.4 |
 | Frontend | Angular 21 (standalone components, Signals) |
 | UI | Angular Material 21 — thème sombre personnalisé |
+| Tests front | Vitest |
 | API | REST JSON — port 8029 |
+| Docs API | springdoc-openapi 2.3.0 (Swagger UI) |
 
 ---
 
@@ -65,18 +78,44 @@ heroquestHeroes/
 ├── backend/                  API Spring Boot
 │   └── src/main/java/
 │       └── fr/rectus29/heroquestheroes/
-│           ├── controllers/  HeroController, QuestController
-│           ├── dto/          HeroDTO, HeroUpdateRequest, QuestDTO
+│           ├── controllers/  HeroController, QuestController, EquipmentController, GameSessionController
+│           ├── dto/          HeroDTO, HeroUpdateRequest, QuestDTO, EquipmentDTO,
+│           │                 GameSessionDTO, CreateSessionRequest, UpdateSessionStateRequest
 │           ├── enums/        HeroClass, Quest, Equipment, MonsterType
-│           ├── model/        Hero, Stuff, GoldEntry
-│           ├── services/     HeroService
+│           ├── model/        Hero, GameSession, Stuff, GoldEntry
+│           ├── services/     HeroService, GameSessionService
+│           ├── repository/   HeroRepository, GameSessionRepository
+│           ├── utils/        HeroUtils — calcul des points résolus
 │           └── migration/    Mongock — index unique sur le nom du héros
 └── frontend/HQHeroesClient/  Client Angular
     └── src/app/
-        ├── components/       hero-list, hero-create, hero-detail
-        ├── models/           interfaces TypeScript
-        └── services/         HeroService, QuestBookService
+        ├── components/       hero-list, hero-create, hero-detail,
+        │                     hero-card, game-setup, game-board, player-view
+        ├── models/           interfaces TypeScript (hero, session, équipement, quêtes)
+        └── services/         HeroService, QuestBookService, GameSessionService, EquipmentService
 ```
+
+---
+
+## API REST
+
+Base : `http://localhost:8029/HQHeroes/api/v1`
+
+| Méthode | URL | Description |
+|---|---|---|
+| `GET` | `/heroes` | Liste tous les héros |
+| `POST` | `/heroes` | Crée un héros |
+| `GET` | `/heroes/{id}` | Détail d'un héros |
+| `PUT` | `/heroes/{id}` | Met à jour un héros |
+| `DELETE` | `/heroes/{id}` | Supprime un héros |
+| `GET` | `/quest` | Liste les 14 quêtes du livre de base |
+| `GET` | `/equipments` | Liste le catalogue d'équipement (filtres `category`, `source`) |
+| `POST` | `/sessions` | Crée une partie (héros + quête optionnelle) |
+| `GET` | `/sessions` | Liste les parties (filtre `status`) |
+| `GET` | `/sessions/{id}` | Détail d'une partie |
+| `PUT` | `/sessions/{id}/state` | Auto-sauvegarde de l'état en jeu (PV/PE, or et équipements en attente) |
+| `POST` | `/sessions/{id}/end` | Termine la quête et engage les gains sur les héros |
+| `POST` | `/sessions/{id}/abandon` | Abandonne la partie (aucun impact sur les héros) |
 
 ---
 

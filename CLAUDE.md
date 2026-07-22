@@ -49,31 +49,42 @@ cd backend
 ```
 fr.rectus29.heroquestheroes
 ├── controllers/
-│   ├── HeroController.java       GET/POST/PUT/DELETE /api/v1/heroes
-│   └── QuestController.java      GET /api/v1/quest
+│   ├── HeroController.java        GET/POST/PUT/DELETE /api/v1/heroes
+│   ├── QuestController.java       GET /api/v1/quest
+│   ├── EquipmentController.java   GET /api/v1/equipments (filtres category, source)
+│   ├── GameSessionController.java /api/v1/sessions — cycle de vie d'une partie
+│   └── AdminController.java       /api/v1/admin — stub vide (pas d'endpoint)
 ├── dto/
-│   ├── HeroDTO.java              réponse héros (inclut resolvedAttackPoints, resolvedDefencePoints)
-│   ├── HeroUpdateRequest.java    corps PUT héros
-│   └── QuestDTO.java             réponse quête (from Quest enum)
+│   ├── HeroDTO.java                 réponse héros (inclut resolvedAttackPoints, resolvedDefencePoints)
+│   ├── HeroUpdateRequest.java       corps PUT héros
+│   ├── QuestDTO.java                réponse quête (from Quest enum)
+│   ├── EquipmentDTO.java            réponse équipement (from Equipment enum)
+│   ├── GameSessionDTO.java          réponse partie (displayName calculé + heroStates)
+│   ├── CreateSessionRequest.java    corps POST session (heroIds, questId?, name?)
+│   └── UpdateSessionStateRequest.java  corps PUT /state (heroStates)
 ├── enums/
 │   ├── HeroClass.java            BARBARE | ELFE | NAIN | ENCHANTEUR (stats de base)
 │   ├── Quest.java                14 quêtes du livre de base (number, title, briefing, goldRewardPerHero, rewardNotes)
-│   ├── Equipment.java            21 équipements (armurerie + récompenses quêtes)
-│   └── MonsterType.java          9 types de monstres
+│   ├── Equipment.java            21 équipements (nested Category, Source, ApplyMode)
+│   └── MonsterType.java          9 types de monstres (non exposé par API)
 ├── model/
-│   ├── GenericEntity.java        base — ObjectId _id
+│   ├── GenericEntity.java        base — ObjectId _id, creationInstant, updateInstant
 │   ├── Hero.java                 @Document("heroes") — name (unique), heroClass, stats, goldEntries, equipements, comment, completedQuests
-│   ├── Stuff.java                équipement porté par un héros (name, desc, attributesList)
+│   ├── GameSession.java          @Document("game_sessions") — name?, questId?, heroIds, heroStates, status (nested Status enum + HeroSessionState)
+│   ├── Stuff.java                équipement porté par un héros (equipment, attributesList) — factory Stuff.from(Equipment)
 │   └── GoldEntry.java            entrée d'or (amount)
 ├── services/
-│   └── HeroService.java          findAll, findOneById, save, deleteById
+│   ├── HeroService.java          findAll, findOneById, save, deleteById
+│   └── GameSessionService.java   create, findAll, findById, updateState, end, abandon
 ├── repository/
-│   └── HeroRepository.java       MongoRepository<Hero, ObjectId>
+│   ├── HeroRepository.java        MongoRepository<Hero, ObjectId> (findByName, findAllByHeroClass)
+│   └── GameSessionRepository.java MongoRepository<GameSession, ObjectId> (findByStatus)
 ├── migration/
-│   └── InitialSetupMigration.java  Mongock — index unique sur heroes.name
+│   └── InitialSetupMigration.java  Mongock — index unique sur heroes.name (@ChangeUnit actuellement commenté → inactif)
 ├── utils/
 │   └── HeroUtils.java            resolveAttackPoint / resolveDefencePoint (somme des attributs d'équipement)
-├── HeroquestHeroesConfiguration.java  Security + CORS WebMvcConfigurer
+├── dbInit.java                     @Component — crée l'index unique heroes.name au démarrage (@PostConstruct)
+├── HeroquestHeroesConfiguration.java  Security + CORS + @EnableScheduling
 └── JacksonMapperConfiguration.java    ObjectId serializer, NON_NULL, ignore unknown
 ```
 
@@ -96,6 +107,13 @@ fr.rectus29.heroquestheroes
 | PUT | `/api/v1/heroes/{id}` | Met à jour un héros (body : `HeroUpdateRequest`) |
 | DELETE | `/api/v1/heroes/{id}` | Supprime un héros |
 | GET | `/api/v1/quest` | Liste les 14 quêtes (`QuestDTO[]`) |
+| GET | `/api/v1/equipments` | Liste le catalogue d'équipement (`EquipmentDTO[]`, filtres `category`, `source`) |
+| POST | `/api/v1/sessions` | Crée une partie (body : `CreateSessionRequest`), init `currentHp`/`currentSp` |
+| GET | `/api/v1/sessions` | Liste les parties (filtre `status`) |
+| GET | `/api/v1/sessions/{id}` | Détail d'une partie (`GameSessionDTO`) |
+| PUT | `/api/v1/sessions/{id}/state` | Auto-save de l'état (body : `UpdateSessionStateRequest`) |
+| POST | `/api/v1/sessions/{id}/end` | Fin de quête : engage or + équipements + `completedQuests` sur chaque héros → `ENDED` |
+| POST | `/api/v1/sessions/{id}/abandon` | Abandonne la partie → `ABANDONED` (aucun impact héros) |
 
 ---
 
@@ -124,21 +142,30 @@ npm start        # ng serve — http://localhost:4200
 ```
 src/app/
 ├── components/
-│   ├── hero-list/        liste des héros — page d'accueil
+│   ├── hero-list/        liste des héros + parties en cours (reprise) — page d'accueil
 │   ├── hero-create/      formulaire de création
-│   └── hero-detail/      consultation + édition d'un héros
+│   ├── hero-detail/      consultation + édition d'un héros
+│   ├── hero-card/        carte héros réutilisable (input hero/liveState, flag readonly, outputs actions)
+│   ├── game-setup/       préparation d'une partie (choix héros + quête) + reprise
+│   ├── game-board/       plateau du Maître du Jeu — suivi PV/PE, or, équipements, auto-save
+│   └── player-view/      vue joueur lecture seule — /game/view/:id, polling 5s
 ├── models/
-│   ├── hero.model.ts     HeroDTO, HeroUpdateRequest, StuffDTO, StuffAttributeDTO
+│   ├── hero.model.ts     HeroDTO, HeroCreateRequest, HeroUpdateRequest, StuffDTO, GameSessionDTO, HeroSessionStateDTO, EquipmentCatalogDTO
 │   ├── hero-class.enum.ts  HERO_CLASS_INFO (label, color, icon par classe)
 │   └── base-quest-book.ts  interface QuestBookEntry (plus de constantes hardcodées — vient du backend)
 ├── services/
-│   ├── hero.service.ts       CRUD héros — baseUrl http://localhost:8029/HQHeroes/api/v1/heroes
-│   └── quest-book.service.ts getAll() — http://localhost:8029/HQHeroes/api/v1/quest
+│   ├── hero.service.ts         CRUD héros — baseUrl http://localhost:8029/HQHeroes/api/v1/heroes
+│   ├── quest-book.service.ts   getAll() — .../api/v1/quest
+│   ├── equipment.service.ts    getAll() — .../api/v1/equipments
+│   └── game-session.service.ts create, load, refresh, listActive, end, abandon, autoSave — .../api/v1/sessions (signals réactifs)
 └── app.routes.ts
     # '' → /heroes
     # /heroes → HeroList
-    # /heroes/new → HeroCreate   ← doit être AVANT /heroes/:id
+    # /heroes/new → HeroCreate          ← doit être AVANT /heroes/:id
     # /heroes/:id → HeroDetail
+    # /game → GameSetup
+    # /game/board/:sessionId → GameBoard  (Maître du Jeu)
+    # /game/view/:sessionId → PlayerView  (Joueurs — lecture seule)
 ```
 
 ### Conventions Angular
@@ -184,7 +211,10 @@ Sources : `ARMURERIE` (achat entre quêtes) | `RECOMPENSE_QUETE` (butin de quêt
 
 ## Notes importantes
 
-- `dbInit.java` à la racine crée le même index unique que la migration Mongock — redondant, peut être supprimé une fois Mongock exécuté
+- `dbInit.java` à la racine crée l'index unique `heroes.name` au démarrage. Le `@ChangeUnit` de `InitialSetupMigration` est **actuellement commenté** (migration Mongock inactive) — c'est donc `dbInit` qui assure l'index
 - Le profil `local` (`application-local.yml`) permet de surcharger la config MongoDB pour le dev
 - `QuestController` (ex-`QuestBookController`) : le fichier s'appelle `QuestController.java`, mapping `/api/v1/quest`
-- `Equipment.java` est un enum catalogue — non encore lié à `Stuff.java` ni exposé par API, prévu pour évolution future
+- `Equipment.java` est un enum catalogue désormais **exposé par API** (`EquipmentController` → `/api/v1/equipments`) et **lié à `Stuff`** via la factory `Stuff.from(Equipment)` (peuple `attributesList` depuis attackMod/defenceMod/healthMod/spiritMod)
+- **Sessions de jeu** : `GameSession` (`@Document("game_sessions")`) porte l'état live d'une partie via `heroStates` (currentHp/currentSp + `pendingGoldEntries`/`pendingEquipements`). Les PV/PE persistés du héros ne bougent **pas** en cours de partie — seul `POST /sessions/{id}/end` engage les gains sur les héros. Specs de conception dans `docs/superpowers/specs/`
+- `AdminController` (`/api/v1/admin`) est un stub vide (aucun endpoint pour l'instant)
+- `MonsterType` est un enum catalogue non exposé par API (prévu pour évolution future)
