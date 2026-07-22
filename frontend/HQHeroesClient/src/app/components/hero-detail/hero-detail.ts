@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { HeroService } from '../../services/hero.service';
 import { QuestBookService } from '../../services/quest-book.service';
 import { EquipmentService } from '../../services/equipment.service';
-import { EquipmentCatalogDTO, GoldEntryDTO, HeroDTO, HeroUpdateRequest, StuffRequest } from '../../models/hero.model';
+import {
+  EquipmentCatalogDTO,
+  GoldEntryDTO,
+  HeroDTO,
+  HeroUpdateRequest,
+  StuffRequest,
+} from '../../models/hero.model';
 import { HERO_CLASS_INFO, HeroClass } from '../../models/hero-class.enum';
 import { QuestBookEntry } from '../../models/base-quest-book';
 
@@ -35,13 +41,14 @@ import { QuestBookEntry } from '../../models/base-quest-book';
     MatTooltipModule,
   ],
   templateUrl: './hero-detail.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hero-detail.css',
 })
 export class HeroDetail implements OnInit {
-  private readonly heroService      = inject(HeroService);
+  private readonly heroService = inject(HeroService);
   private readonly questBookService = inject(QuestBookService);
   private readonly equipmentService = inject(EquipmentService);
-  private readonly route  = inject(ActivatedRoute);
+  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   hero = signal<HeroDTO | null>(null);
@@ -50,8 +57,8 @@ export class HeroDetail implements OnInit {
   editMode = signal(false);
   saving = signal(false);
 
-  allQuests      = signal<QuestBookEntry[]>([]);
-  allEquipments  = signal<EquipmentCatalogDTO[]>([]);
+  allQuests = signal<QuestBookEntry[]>([]);
+  allEquipments = signal<EquipmentCatalogDTO[]>([]);
 
   // Champs du formulaire d'édition
   editName = '';
@@ -99,21 +106,30 @@ export class HeroDetail implements OnInit {
 
   getDogmeLabel(dogme: string): string {
     const labels: Record<string, string> = {
-      HEALTH: 'PV', SPIRIT: 'PE', ATTACK: 'ATK', DEFENCE: 'DEF',
+      HEALTH: 'PV',
+      SPIRIT: 'PE',
+      ATTACK: 'ATK',
+      DEFENCE: 'DEF',
     };
     return labels[dogme] ?? dogme;
   }
 
   getDogmeIcon(dogme: string): string {
     const icons: Record<string, string> = {
-      HEALTH: 'favorite', SPIRIT: 'auto_awesome', ATTACK: 'gavel', DEFENCE: 'security',
+      HEALTH: 'favorite',
+      SPIRIT: 'auto_awesome',
+      ATTACK: 'gavel',
+      DEFENCE: 'security',
     };
     return icons[dogme] ?? 'star';
   }
 
   getDogmeClass(dogme: string): string {
     const classes: Record<string, string> = {
-      HEALTH: 'health', SPIRIT: 'spirit', ATTACK: 'attack', DEFENCE: 'defence',
+      HEALTH: 'health',
+      SPIRIT: 'spirit',
+      ATTACK: 'attack',
+      DEFENCE: 'defence',
     };
     return classes[dogme] ?? '';
   }
@@ -128,7 +144,11 @@ export class HeroDetail implements OnInit {
     if (this.newEntryAmount === 0) return;
     this.editGoldEntries = [
       ...this.editGoldEntries,
-      { amount: this.newEntryAmount, comment: this.newEntryComment || null, date: new Date().toISOString() },
+      {
+        amount: this.newEntryAmount,
+        comment: this.newEntryComment || null,
+        date: new Date().toISOString(),
+      },
     ];
     this.newEntryAmount = 0;
     this.newEntryComment = '';
@@ -151,14 +171,14 @@ export class HeroDetail implements OnInit {
   }
 
   private buildStuffRequests(): StuffRequest[] {
-    return this.editEquipements.map(id => {
-      const eq = this.allEquipments().find(e => e.id === id);
+    return this.editEquipements.map((id) => {
+      const eq = this.allEquipments().find((e) => e.id === id);
       const attributesList: StuffRequest['attributesList'] = [];
       if (eq) {
-        if (eq.attackMod  !== 0) attributesList.push({ dogma: 'ATTACK',  value: eq.attackMod  });
+        if (eq.attackMod !== 0) attributesList.push({ dogma: 'ATTACK', value: eq.attackMod });
         if (eq.defenceMod !== 0) attributesList.push({ dogma: 'DEFENCE', value: eq.defenceMod });
-        if (eq.healthMod  !== 0) attributesList.push({ dogma: 'HEALTH',  value: eq.healthMod  });
-        if (eq.spiritMod  !== 0) attributesList.push({ dogma: 'SPIRIT',  value: eq.spiritMod  });
+        if (eq.healthMod !== 0) attributesList.push({ dogma: 'HEALTH', value: eq.healthMod });
+        if (eq.spiritMod !== 0) attributesList.push({ dogma: 'SPIRIT', value: eq.spiritMod });
       }
       return { equipment: id, attributesList };
     });
@@ -176,7 +196,7 @@ export class HeroDetail implements OnInit {
     this.editGoldEntries = [...(hero.goldEntries ?? [])];
     this.editComment = hero.comment ?? '';
     this.editCompletedQuests = [...(hero.completedQuests ?? [])];
-    this.editEquipements = hero.equipements.map(e => e.id);
+    this.editEquipements = hero.equipements.map((e) => e.id);
     this.selectedEquipmentId = '';
     this.newEntryAmount = 0;
     this.newEntryComment = '';

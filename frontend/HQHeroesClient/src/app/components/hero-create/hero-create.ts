@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,6 +23,7 @@ import { ALL_HERO_CLASSES, HERO_CLASS_INFO, HeroClass } from '../../models/hero-
     MatTooltipModule,
   ],
   templateUrl: './hero-create.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hero-create.css',
 })
 export class HeroCreate {
@@ -46,22 +47,24 @@ export class HeroCreate {
     this.submitting.set(true);
     this.error.set(null);
 
-    this.heroService.create({
-      name,
-      heroClass: this.selectedClass,
-      healthPoints: info.healthPoints,
-      spiritPoints: info.spiritPoints,
-      attackPoints: info.attackPoints,
-      defencePoints: info.defencePoints,
-      comment: this.heroComment.trim() || null,
-      goldEntries: [],
-      equipements: [],
-    }).subscribe({
-      next: (hero) => this.router.navigate(['/heroes', hero.id]),
-      error: () => {
-        this.error.set('Impossible de créer le héros. Le serveur est-il démarré ?');
-        this.submitting.set(false);
-      },
-    });
+    this.heroService
+      .create({
+        name,
+        heroClass: this.selectedClass,
+        healthPoints: info.healthPoints,
+        spiritPoints: info.spiritPoints,
+        attackPoints: info.attackPoints,
+        defencePoints: info.defencePoints,
+        comment: this.heroComment.trim() || null,
+        goldEntries: [],
+        equipements: [],
+      })
+      .subscribe({
+        next: (hero) => this.router.navigate(['/heroes', hero.id]),
+        error: () => {
+          this.error.set('Impossible de créer le héros. Le serveur est-il démarré ?');
+          this.submitting.set(false);
+        },
+      });
   }
 }
